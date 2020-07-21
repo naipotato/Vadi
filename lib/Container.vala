@@ -126,7 +126,7 @@ public class Vadi.Container : Object {
     private Value[] get_matched_property_values ((unowned ParamSpec)[] props) {
         Value[] values = new Value[0];
 
-        for (var i  = 0; i < props.length; i++) {
+        for (var i = 0; i < props.length; i++) {
             foreach (var key_type in this._instances.keys) {
                 if (props[i].value_type == key_type) {
                     values.resize (values.length + 1);
