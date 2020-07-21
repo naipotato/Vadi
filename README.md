@@ -46,7 +46,7 @@ container.register_type (typeof (Service), typeof (FoodService));
 // properties
 container.register_factory (typeof (Service), container => {
     return new FoodService (container.resolve (typeof (Database)));
-})
+});
 
 // Finally, if all you want is for the container to return an instance you already have pre-built,
 // you can use register_instance () to pass it to it
