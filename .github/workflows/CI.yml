@@ -25,7 +25,9 @@ jobs:
     steps:
     - uses: actions/checkout@v2.1.0
     - name: Install dependencies
-      run: apt install -y -qq valac libgee-0.8-dev meson libglib2.0-dev libgirepository1.0-dev lcov
+      run: |
+        sudo apt install -y -qq valac libgee-0.8-dev meson libglib2.0-dev libgirepository1.0-dev
+                 lcov
     - name: Build Vadi
       run: |
         meson build --prefix /usr -Db_coverage=true
