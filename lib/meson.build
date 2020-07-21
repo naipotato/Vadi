@@ -1,6 +1,5 @@
 sources = files (
-    'Container.vala',
-    'IContainer.vala'
+    'Container.vala'
 )
 
 vadi_version = meson.project_version ()
@@ -68,7 +67,7 @@ pkg = import ('pkgconfig')
 pkg.generate (vadi,
     description: 'IoC Container for Vala',
        filebase: vadi_api_name,
-            url: 'https://github.com/nahuelwexd/vadi'
+            url: 'https://github.com/nahuelwexd/Vadi'
 )
 
 requires = []

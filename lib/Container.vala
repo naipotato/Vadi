@@ -19,7 +19,7 @@
 [CCode (has_target = false)]
 public delegate Object Vadi.ContainerFactoryFunc (Container container);
 
-public class Vadi.Container : IContainer, Object {
+public class Vadi.Container : Object {
 
     private Gee.Map<Type, Type> _types;
     private Gee.Map<Type, ContainerFactoryFunc> _factories;
