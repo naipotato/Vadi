@@ -1,5 +1,7 @@
 # Vadi
 
+![Continuous Integration](https://github.com/nahuelwexd/Vadi/workflows/Continuous%20Integration/badge.svg) [![codecov](https://codecov.io/gh/nahuelwexd/Vadi/branch/master/graph/badge.svg)](https://codecov.io/gh/nahuelwexd/Vadi)
+
 Vadi is an IoC Container developed in order to facilitate the usage of dependency injection for Vala
 developers, but it can be used on any GObject-compatible language, with more or less syntax
 facilities.
