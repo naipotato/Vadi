@@ -34,6 +34,14 @@ class Client : Object {
 int main (string[] args) {
     Test.init (ref args);
 
+    Test.add_func ("/vadi/container/resolve/iface", () => {
+        var container = new Vadi.Container ();
+
+        var service = container.resolve (typeof (Service));
+
+        assert_null (service);
+    });
+
     Test.add_func ("/vadi/container/register/none", () => {
         var container = new Vadi.Container ();
 
@@ -58,6 +66,19 @@ int main (string[] args) {
         var container = new Vadi.Container ();
 
         container.register_type (typeof (Service), typeof (FoodService));
+
+        var client = container.resolve (typeof (Client));
+
+        assert_nonnull (client);
+        assert_nonnull (((Client) client).service);
+        assert_true (((Client) client).service.get_type ().is_a (typeof (FoodService)));
+    });
+
+    Test.add_func ("/vadi/container/register/type/register-myself", () => {
+        var container = new Vadi.Container ();
+
+        container.register_type (typeof (Service), typeof (FoodService));
+        container.register_type (typeof (Client), typeof (Client));
 
         var client = container.resolve (typeof (Client));
 
