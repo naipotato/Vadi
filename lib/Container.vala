@@ -70,8 +70,8 @@ public class Vadi.Container : Object {
             var names = this.get_matched_property_names (props);
             var values = this.get_matched_property_values (props);
 
-            this._instances[resolve_type] = Object.new_with_properties (resolve_type, names, values);
-            return this._instances[resolve_type];
+            this._instances[type] = Object.new_with_properties (resolve_type, names, values);
+            return this._instances[type];
         }
 
         return null;
