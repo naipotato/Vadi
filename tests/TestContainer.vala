@@ -62,6 +62,22 @@ int main (string[] args) {
         assert_true (service.get_type ().is_a (typeof (FoodService)));
     });
 
+    Test.add_func ("/vadi/container/register/type/simple-repeat", () => {
+        var container = new Vadi.Container ();
+
+        container.register_type (typeof (Service), typeof (FoodService));
+
+        var serviceA = (Service) container.resolve (typeof (Service));
+        var serviceB = (Service) container.resolve (typeof (Service));
+
+        assert_nonnull (serviceA);
+        assert_nonnull (serviceB);
+        assert_true (serviceA.get_type ().is_a (typeof (FoodService)));
+        assert_true (serviceB.get_type ().is_a (typeof (FoodService)));
+
+        assert_true (serviceA == serviceB);
+    });
+
     Test.add_func ("/vadi/container/register/type/recursive", () => {
         var container = new Vadi.Container ();
 
