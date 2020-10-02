@@ -16,4 +16,7 @@ gobject_dep = dependency ('gobject-2.0', version: '>= @0@'.format (glib_min_vers
 gee_dep = dependency ('gee-0.8')
 
 subdir ('lib')
-subdir ('tests')
+
+if get_option ('tests')
+    subdir ('tests')
+endif
