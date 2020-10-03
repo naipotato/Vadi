@@ -16,14 +16,14 @@
  */
 
 [CCode (has_target = false)]
-public delegate Object Vadi.ContainerFactoryFunc (Container container);
+public delegate Object Vadi.ContainerFactoryFunc (Vadi.Container container);
 
 public class Vadi.Container : Object
 {
     /* Private fields */
 
     private Gee.Map<Type, Type> _types;
-    private Gee.Map<Type, ContainerFactoryFunc> _factories;
+    private Gee.Map<Type, Vadi.ContainerFactoryFunc> _factories;
     private Gee.Map<Type, Object> _instances;
 
     /* End private fields */
@@ -39,7 +39,7 @@ public class Vadi.Container : Object
         this._types[key_type] = value_type;
     }
 
-    public void register_factory (Type key_type, ContainerFactoryFunc container_factory)
+    public void register_factory (Type key_type, Vadi.ContainerFactoryFunc container_factory)
         requires (key_type.is_interface () || key_type.is_object ())
     {
         this._factories[key_type] = container_factory;
@@ -175,7 +175,7 @@ public class Vadi.Container : Object
     construct
     {
         this._types = new Gee.HashMap<Type, Type> ();
-        this._factories = new Gee.HashMap<Type, ContainerFactoryFunc> ();
+        this._factories = new Gee.HashMap<Type, Vadi.ContainerFactoryFunc> ();
         this._instances = new Gee.HashMap<Type, Object> ();
     }
 
