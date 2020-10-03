@@ -20,15 +20,27 @@ public delegate Object Vadi.ContainerFactoryFunc (Container container);
 
 public class Vadi.Container : Object {
 
+    /* Private fields */
+
     private Gee.Map<Type, Type> _types;
     private Gee.Map<Type, ContainerFactoryFunc> _factories;
     private Gee.Map<Type, Object> _instances;
+
+    /* End private fields */
+
+
+    /* GObject blocks */
 
     construct {
         this._types = new Gee.HashMap<Type, Type> ();
         this._factories = new Gee.HashMap<Type, ContainerFactoryFunc> ();
         this._instances = new Gee.HashMap<Type, Object> ();
     }
+
+    /* End GObject blocks */
+
+
+    /* Public methods */
 
     public void register_type (Type key_type, Type value_type)
         requires (key_type.is_interface () || key_type.is_object ())
@@ -75,6 +87,11 @@ public class Vadi.Container : Object {
 
         return null;
     }
+
+    /* End public methods */
+
+
+    /* Private methods */
 
     private (unowned ParamSpec)[] get_construct_properties (Type type) {
         var klass = (ObjectClass) type.class_ref ();
@@ -156,4 +173,6 @@ public class Vadi.Container : Object {
 
         return values;
     }
+
+    /* End private methods */
 }
