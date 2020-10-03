@@ -1,5 +1,5 @@
 sources = files (
-    'Container.vala'
+    'vadi-container.vala'
 )
 
 vadi_version = meson.project_version ()
