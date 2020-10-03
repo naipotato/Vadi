@@ -18,8 +18,8 @@
 [CCode (has_target = false)]
 public delegate Object Vadi.ContainerFactoryFunc (Container container);
 
-public class Vadi.Container : Object {
-
+public class Vadi.Container : Object
+{
     /* Private fields */
 
     private Gee.Map<Type, Type> _types;
@@ -52,7 +52,8 @@ public class Vadi.Container : Object {
         this._instances[key_type] = instance;
     }
 
-    public Object? resolve (Type type) requires (type.is_interface () || type.is_object ()) {
+    public Object? resolve (Type type) requires (type.is_interface () || type.is_object ())
+    {
         if (this._instances.has_key (type)) {
             return this._instances[type];
         }
@@ -82,7 +83,8 @@ public class Vadi.Container : Object {
 
     /* Private methods */
 
-    private (unowned ParamSpec)[] get_construct_properties (Type type) {
+    private (unowned ParamSpec)[] get_construct_properties (Type type)
+    {
         var klass = (ObjectClass) type.class_ref ();
         var props = klass.list_properties ();
         (unowned ParamSpec)[] result = new (unowned ParamSpec)[0];
@@ -99,7 +101,8 @@ public class Vadi.Container : Object {
         return result;
     }
 
-    private (unowned string)[] get_matched_property_names ((unowned ParamSpec)[] props) {
+    private (unowned string)[] get_matched_property_names ((unowned ParamSpec)[] props)
+    {
         (unowned string)[] names = new (unowned string)[0];
 
         for (var i = 0; i < props.length; i++) {
@@ -128,7 +131,8 @@ public class Vadi.Container : Object {
         return names;
     }
 
-    private Value[] get_matched_property_values ((unowned ParamSpec)[] props) {
+    private Value[] get_matched_property_values ((unowned ParamSpec)[] props)
+    {
         Value[] values = new Value[0];
 
         for (var i = 0; i < props.length; i++) {
@@ -168,7 +172,8 @@ public class Vadi.Container : Object {
 
     /* GObject blocks */
 
-    construct {
+    construct
+    {
         this._types = new Gee.HashMap<Type, Type> ();
         this._factories = new Gee.HashMap<Type, ContainerFactoryFunc> ();
         this._instances = new Gee.HashMap<Type, Object> ();
