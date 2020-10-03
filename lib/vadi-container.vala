@@ -29,17 +29,6 @@ public class Vadi.Container : Object {
     /* End private fields */
 
 
-    /* GObject blocks */
-
-    construct {
-        this._types = new Gee.HashMap<Type, Type> ();
-        this._factories = new Gee.HashMap<Type, ContainerFactoryFunc> ();
-        this._instances = new Gee.HashMap<Type, Object> ();
-    }
-
-    /* End GObject blocks */
-
-
     /* Public methods */
 
     public void register_type (Type key_type, Type value_type)
@@ -175,4 +164,15 @@ public class Vadi.Container : Object {
     }
 
     /* End private methods */
+
+
+    /* GObject blocks */
+
+    construct {
+        this._types = new Gee.HashMap<Type, Type> ();
+        this._factories = new Gee.HashMap<Type, ContainerFactoryFunc> ();
+        this._instances = new Gee.HashMap<Type, Object> ();
+    }
+
+    /* End GObject blocks */
 }
