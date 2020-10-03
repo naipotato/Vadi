@@ -52,7 +52,8 @@ public class Vadi.Container : Object
         this._instances[key_type] = instance;
     }
 
-    public Object? resolve (Type type) requires (type.is_interface () || type.is_object ())
+    public Object? resolve (Type type)
+        requires (type.is_interface () || type.is_object ())
     {
         if (this._instances.has_key (type)) {
             return this._instances[type];
