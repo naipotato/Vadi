@@ -92,7 +92,7 @@ public class Vadi.Container : Object
 
         for (var i = 0; i < props.length; i++) {
             if ((props[i].flags & ParamFlags.CONSTRUCT) != 0 ||
-            (props[i].flags & ParamFlags.CONSTRUCT_ONLY) != 0)
+                (props[i].flags & ParamFlags.CONSTRUCT_ONLY) != 0)
             {
                 result.resize (result.length + 1);
                 result[result.length - 1] = props[i];
