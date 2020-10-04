@@ -62,6 +62,7 @@ public class Vadi.Container : GLib.Object
         if (this._factories.has_key (type)) {
             ContainerFactoryFunc factory = this._factories[type];
             this._instances[type]        = factory (this);
+
             return this._instances[type];
         }
 
@@ -74,6 +75,7 @@ public class Vadi.Container : GLib.Object
             GLib.Value[] values      = this.get_matched_property_values (props);
 
             this._instances[type] = GLib.Object.new_with_properties (resolve_type, names, values);
+
             return this._instances[type];
         }
 
@@ -142,8 +144,10 @@ public class Vadi.Container : GLib.Object
             foreach (GLib.Type key_type in this._instances.keys) {
                 if (props[i].value_type == key_type) {
                     values.resize (values.length + 1);
+
                     var @value = GLib.Value (key_type);
                     @value.set_object (this.resolve (key_type));
+
                     values[values.length - 1] = @value;
                 }
             }
@@ -151,8 +155,10 @@ public class Vadi.Container : GLib.Object
             foreach (GLib.Type key_type in this._factories.keys) {
                 if (props[i].value_type == key_type) {
                     values.resize (values.length + 1);
+
                     var @value = GLib.Value (key_type);
                     @value.set_object (this.resolve (key_type));
+
                     values[values.length - 1] = @value;
                 }
             }
@@ -160,8 +166,10 @@ public class Vadi.Container : GLib.Object
             foreach (GLib.Type key_type in this._types.keys) {
                 if (props[i].value_type == key_type) {
                     values.resize (values.length + 1);
+
                     var @value = GLib.Value (key_type);
                     @value.set_object (this.resolve (key_type));
+
                     values[values.length - 1] = @value;
                 }
             }
