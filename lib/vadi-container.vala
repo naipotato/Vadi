@@ -52,34 +52,10 @@ public class Vadi.Container : GLib.Object
         this._instances[typeof (K)] = (GLib.Object) instance;
     }
 
-    public GLib.Object? resolve (GLib.Type type)
-        requires (type.is_interface () || type.is_object ())
+    public T? resolve<T> ()
+        requires (typeof (T).is_interface () || typeof (T).is_object ())
     {
-        if (this._instances.has_key (type)) {
-            return this._instances[type];
-        }
-
-        if (this._factories.has_key (type)) {
-            ContainerFactoryFunc factory = this._factories[type];
-            this._instances[type]        = (GLib.Object) factory (this);
-
-            return this._instances[type];
-        }
-
-        GLib.Type resolve_type = this._types.has_key (type) ? this._types[type] : type;
-
-        if (resolve_type.is_object ()) {
-            (unowned GLib.ParamSpec)[] props = this.get_construct_properties (resolve_type);
-
-            (unowned string)[] names = this.get_matched_property_names (props);
-            GLib.Value[] values      = this.get_matched_property_values (props);
-
-            this._instances[type] = GLib.Object.new_with_properties (resolve_type, names, values);
-
-            return this._instances[type];
-        }
-
-        return null;
+        return this.resolve_type (typeof (T));
     }
 
     /* End public methods */
@@ -146,7 +122,7 @@ public class Vadi.Container : GLib.Object
                     values.resize (values.length + 1);
 
                     var @value = GLib.Value (key_type);
-                    @value.set_object (this.resolve (key_type));
+                    @value.set_object (this.resolve_type (key_type));
 
                     values[values.length - 1] = @value;
                 }
@@ -157,7 +133,7 @@ public class Vadi.Container : GLib.Object
                     values.resize (values.length + 1);
 
                     var @value = GLib.Value (key_type);
-                    @value.set_object (this.resolve (key_type));
+                    @value.set_object (this.resolve_type (key_type));
 
                     values[values.length - 1] = @value;
                 }
@@ -168,7 +144,7 @@ public class Vadi.Container : GLib.Object
                     values.resize (values.length + 1);
 
                     var @value = GLib.Value (key_type);
-                    @value.set_object (this.resolve (key_type));
+                    @value.set_object (this.resolve_type (key_type));
 
                     values[values.length - 1] = @value;
                 }
@@ -176,6 +152,35 @@ public class Vadi.Container : GLib.Object
         }
 
         return values;
+    }
+
+    private GLib.Object? resolve_type (GLib.Type type)
+    {
+        if (this._instances.has_key (type)) {
+            return this._instances[type];
+        }
+
+        if (this._factories.has_key (type)) {
+            ContainerFactoryFunc factory = this._factories[type];
+            this._instances[type]        = (GLib.Object) factory (this);
+
+            return this._instances[type];
+        }
+
+        GLib.Type resolve_type = this._types.has_key (type) ? this._types[type] : type;
+
+        if (resolve_type.is_object ()) {
+            (unowned GLib.ParamSpec)[] props = this.get_construct_properties (resolve_type);
+
+            (unowned string)[] names = this.get_matched_property_names (props);
+            GLib.Value[] values      = this.get_matched_property_values (props);
+
+            this._instances[type] = GLib.Object.new_with_properties (resolve_type, names, values);
+
+            return this._instances[type];
+        }
+
+        return null;
     }
 
     /* End private methods */

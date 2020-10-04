@@ -44,10 +44,10 @@ int main (string[] args)
 {
     GLib.Test.init (ref args);
 
-    GLib.Test.add_func ("/vadi/container/resolve/iface", () => {
+    GLib.Test.add_func ("/vadi/container/resolve/interface", () => {
         var container = new Vadi.Container ();
 
-        GLib.Object service = container.resolve (typeof (Service));
+        Service service = container.resolve<Service> ();
 
         GLib.assert_null (service);
     });
@@ -55,10 +55,9 @@ int main (string[] args)
     GLib.Test.add_func ("/vadi/container/register/none", () => {
         var container = new Vadi.Container ();
 
-        GLib.Object service = container.resolve (typeof (FoodService));
+        FoodService service = container.resolve<FoodService> ();
 
         GLib.assert_nonnull (service);
-        GLib.assert_true (service.get_type ().is_a (typeof (FoodService)));
     });
 
     GLib.Test.add_func ("/vadi/container/register/type/simple", () => {
@@ -66,10 +65,10 @@ int main (string[] args)
 
         container.register_type<Service, FoodService> ();
 
-        GLib.Object service = container.resolve (typeof (Service));
+        Service? service = container.resolve<Service> ();
 
         GLib.assert_nonnull (service);
-        GLib.assert_true (service.get_type ().is_a (typeof (FoodService)));
+        GLib.assert_true (service is FoodService);
     });
 
     GLib.Test.add_func ("/vadi/container/register/type/simple-repeat", () => {
@@ -77,13 +76,13 @@ int main (string[] args)
 
         container.register_type<Service, FoodService> ();
 
-        GLib.Object service_a = container.resolve (typeof (Service));
-        GLib.Object service_b = container.resolve (typeof (Service));
+        Service service_a = container.resolve<Service> ();
+        Service service_b = container.resolve<Service> ();
 
         GLib.assert_nonnull (service_a);
         GLib.assert_nonnull (service_b);
-        GLib.assert_true (service_a.get_type ().is_a (typeof (FoodService)));
-        GLib.assert_true (service_b.get_type ().is_a (typeof (FoodService)));
+        GLib.assert_true (service_a is FoodService);
+        GLib.assert_true (service_b is FoodService);
 
         GLib.assert_true (service_a == service_b);
     });
@@ -93,11 +92,11 @@ int main (string[] args)
 
         container.register_type<Service, FoodService> ();
 
-        GLib.Object client = container.resolve (typeof (Client));
+        Client client = container.resolve<Client> ();
 
         GLib.assert_nonnull (client);
-        GLib.assert_nonnull (((Client) client).service);
-        GLib.assert_true (((Client) client).service.get_type ().is_a (typeof (FoodService)));
+        GLib.assert_nonnull (client.service);
+        GLib.assert_true (client.service is FoodService);
     });
 
     GLib.Test.add_func ("/vadi/container/register/type/register-myself", () => {
@@ -106,11 +105,11 @@ int main (string[] args)
         container.register_type<Service, FoodService> ();
         container.register_type<Client, Client> ();
 
-        GLib.Object client = container.resolve (typeof (Client));
+        Client client = container.resolve<Client> ();
 
         GLib.assert_nonnull (client);
-        GLib.assert_nonnull (((Client) client).service);
-        GLib.assert_true (((Client) client).service.get_type ().is_a (typeof (FoodService)));
+        GLib.assert_nonnull (client.service);
+        GLib.assert_true (client.service is FoodService);
     });
 
     GLib.Test.add_func ("/vadi/container/register/factory/simple", () => {
@@ -120,10 +119,10 @@ int main (string[] args)
             return new FoodService ();
         });
 
-        GLib.Object service = (Service) container.resolve (typeof (Service));
+        Service service = container.resolve<Service> ();
 
         GLib.assert_nonnull (service);
-        GLib.assert_true (service.get_type ().is_a (typeof (FoodService)));
+        GLib.assert_true (service is FoodService);
     });
 
     GLib.Test.add_func ("/vadi/container/register/factory/recursive", () => {
@@ -133,14 +132,14 @@ int main (string[] args)
             return new FoodService ();
         });
         container.register_factory<Client> (container => {
-            return new Client ((Service) container.resolve (typeof (Service)));
+            return new Client (container.resolve<Service> ());
         });
 
-        GLib.Object client = container.resolve (typeof (Client));
+        Client client = container.resolve<Client> ();
 
         GLib.assert_nonnull (client);
-        GLib.assert_nonnull (((Client) client).service);
-        GLib.assert_true (((Client) client).service.get_type ().is_a (typeof (FoodService)));
+        GLib.assert_nonnull (client.service);
+        GLib.assert_true (client.service is FoodService);
     });
 
     GLib.Test.add_func ("/vadi/container/register/instance/simple", () => {
@@ -149,7 +148,7 @@ int main (string[] args)
 
         container.register_instance<Service> (food_service);
 
-        GLib.Object service = container.resolve (typeof (Service));
+        Service service = container.resolve<Service> ();
 
         GLib.assert_nonnull (service);
         GLib.assert_true (service == food_service);
@@ -160,14 +159,14 @@ int main (string[] args)
 
         container.register_type<Service, FoodService> ();
         container.register_factory<Client> (container => {
-            return new Client ((Service) container.resolve (typeof (Service)));
+            return new Client (container.resolve<Service> ());
         });
 
-        GLib.Object client = container.resolve (typeof (Client));
+        Client client = container.resolve<Client> ();
 
         GLib.assert_nonnull (client);
-        GLib.assert_nonnull (((Client) client).service);
-        GLib.assert_true (((Client) client).service.get_type ().is_a (typeof (FoodService)));
+        GLib.assert_nonnull (client.service);
+        GLib.assert_true (client.service is FoodService);
     });
 
     GLib.Test.add_func ("/vadi/container/register/mixed/factory-type", () => {
@@ -177,11 +176,11 @@ int main (string[] args)
             return new FoodService ();
         });
 
-        GLib.Object client = container.resolve (typeof (Client));
+        Client client = container.resolve<Client> ();
 
         GLib.assert_nonnull (client);
-        GLib.assert_nonnull (((Client) client).service);
-        GLib.assert_true (((Client) client).service.get_type ().is_a (typeof (FoodService)));
+        GLib.assert_nonnull (client.service);
+        GLib.assert_true (client.service is FoodService);
     });
 
     GLib.Test.add_func ("/vadi/container/register/mixed/instance-type", () => {
@@ -190,11 +189,11 @@ int main (string[] args)
 
         container.register_instance<Service> (food_service);
 
-        GLib.Object client = container.resolve (typeof (Client));
+        Client client = container.resolve<Client> ();
 
         GLib.assert_nonnull (client);
-        GLib.assert_nonnull (((Client) client).service);
-        GLib.assert_true (((Client) client).service == food_service);
+        GLib.assert_nonnull (client.service);
+        GLib.assert_true (client.service == food_service);
     });
 
     GLib.Test.add_func ("/vadi/container/register/mixed/instance-factory", () => {
@@ -203,14 +202,14 @@ int main (string[] args)
 
         container.register_instance<Service> (food_service);
         container.register_factory<Client> (container => {
-            return new Client ((Service) container.resolve (typeof (Service)));
+            return new Client (container.resolve<Service> ());
         });
 
-        GLib.Object client = container.resolve (typeof (Client));
+        Client client = container.resolve<Client> ();
 
         GLib.assert_nonnull (client);
-        GLib.assert_nonnull (((Client) client).service);
-        GLib.assert_true (((Client) client).service == food_service);
+        GLib.assert_nonnull (client.service);
+        GLib.assert_true (client.service == food_service);
     });
 
     return GLib.Test.run ();
