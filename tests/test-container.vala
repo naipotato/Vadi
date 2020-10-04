@@ -64,7 +64,7 @@ int main (string[] args)
     GLib.Test.add_func ("/vadi/container/register/type/simple", () => {
         var container = new Vadi.Container ();
 
-        container.register_type (typeof (Service), typeof (FoodService));
+        container.register_type<Service, FoodService> ();
 
         GLib.Object service = container.resolve (typeof (Service));
 
@@ -75,7 +75,7 @@ int main (string[] args)
     GLib.Test.add_func ("/vadi/container/register/type/simple-repeat", () => {
         var container = new Vadi.Container ();
 
-        container.register_type (typeof (Service), typeof (FoodService));
+        container.register_type<Service, FoodService> ();
 
         GLib.Object service_a = container.resolve (typeof (Service));
         GLib.Object service_b = container.resolve (typeof (Service));
@@ -91,7 +91,7 @@ int main (string[] args)
     GLib.Test.add_func ("/vadi/container/register/type/recursive", () => {
         var container = new Vadi.Container ();
 
-        container.register_type (typeof (Service), typeof (FoodService));
+        container.register_type<Service, FoodService> ();
 
         GLib.Object client = container.resolve (typeof (Client));
 
@@ -103,8 +103,8 @@ int main (string[] args)
     GLib.Test.add_func ("/vadi/container/register/type/register-myself", () => {
         var container = new Vadi.Container ();
 
-        container.register_type (typeof (Service), typeof (FoodService));
-        container.register_type (typeof (Client), typeof (Client));
+        container.register_type<Service, FoodService> ();
+        container.register_type<Client, Client> ();
 
         GLib.Object client = container.resolve (typeof (Client));
 
@@ -158,7 +158,7 @@ int main (string[] args)
     GLib.Test.add_func ("/vadi/container/register/mixed/type-factory", () => {
         var container = new Vadi.Container ();
 
-        container.register_type (typeof (Service), typeof (FoodService));
+        container.register_type<Service, FoodService> ();
         container.register_factory<Client> (container => {
             return new Client ((Service) container.resolve (typeof (Service)));
         });

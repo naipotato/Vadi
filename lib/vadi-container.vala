@@ -31,12 +31,12 @@ public class Vadi.Container : GLib.Object
 
     /* Public methods */
 
-    public void register_type (GLib.Type key_type, GLib.Type value_type)
-        requires (key_type.is_interface () || key_type.is_object ())
-        requires (value_type.is_object ())
-        requires (value_type.is_a (key_type))
+    public void register_type<K, V> ()
+        requires (typeof (K).is_interface () || typeof (K).is_object ())
+        requires (typeof (V).is_object ())
+        requires (typeof (V).is_a (typeof (K)))
     {
-        this._types[key_type] = value_type;
+        this._types[typeof (K)] = typeof (V);
     }
 
     public void register_factory<K> (ContainerFactoryFunc<K> container_factory)
