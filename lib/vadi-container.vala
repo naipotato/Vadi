@@ -16,22 +16,22 @@
  */
 
 [CCode (has_target = false)]
-public delegate Object Vadi.ContainerFactoryFunc (Vadi.Container container);
+public delegate GLib.Object Vadi.ContainerFactoryFunc (Container container);
 
-public class Vadi.Container : Object
+public class Vadi.Container : GLib.Object
 {
     /* Private fields */
 
-    private Gee.Map<Type, Type>                      _types;
-    private Gee.Map<Type, Vadi.ContainerFactoryFunc> _factories;
-    private Gee.Map<Type, Object>                    _instances;
+    private Gee.Map<GLib.Type, GLib.Type>            _types;
+    private Gee.Map<GLib.Type, ContainerFactoryFunc> _factories;
+    private Gee.Map<GLib.Type, GLib.Object>          _instances;
 
     /* End private fields */
 
 
     /* Public methods */
 
-    public void register_type (Type key_type, Type value_type)
+    public void register_type (GLib.Type key_type, GLib.Type value_type)
         requires (key_type.is_interface () || key_type.is_object ())
         requires (value_type.is_object ())
         requires (value_type.is_a (key_type))
@@ -39,20 +39,20 @@ public class Vadi.Container : Object
         this._types[key_type] = value_type;
     }
 
-    public void register_factory (Type key_type, Vadi.ContainerFactoryFunc container_factory)
+    public void register_factory (GLib.Type key_type, ContainerFactoryFunc container_factory)
         requires (key_type.is_interface () || key_type.is_object ())
     {
         this._factories[key_type] = container_factory;
     }
 
-    public void register_instance (Type key_type, Object instance)
+    public void register_instance (GLib.Type key_type, GLib.Object instance)
         requires (key_type.is_interface () || key_type.is_object ())
         requires (instance.get_type ().is_a (key_type))
     {
         this._instances[key_type] = instance;
     }
 
-    public Object? resolve (Type type)
+    public GLib.Object? resolve (GLib.Type type)
         requires (type.is_interface () || type.is_object ())
     {
         if (this._instances.has_key (type)) {
@@ -72,7 +72,7 @@ public class Vadi.Container : Object
             var names  = this.get_matched_property_names (props);
             var values = this.get_matched_property_values (props);
 
-            this._instances[type] = Object.new_with_properties (resolve_type, names, values);
+            this._instances[type] = GLib.Object.new_with_properties (resolve_type, names, values);
             return this._instances[type];
         }
 
@@ -84,15 +84,15 @@ public class Vadi.Container : Object
 
     /* Private methods */
 
-    private (unowned ParamSpec)[] get_construct_properties (Type type)
+    private (unowned GLib.ParamSpec)[] get_construct_properties (GLib.Type type)
     {
-        var klass = (ObjectClass) type.class_ref ();
+        var klass = (GLib.ObjectClass) type.class_ref ();
         var props = klass.list_properties ();
-        (unowned ParamSpec)[] result = new (unowned ParamSpec)[0];
+        (unowned GLib.ParamSpec)[] result = new (unowned GLib.ParamSpec)[0];
 
         for (var i = 0; i < props.length; i++) {
-            if ((props[i].flags & ParamFlags.CONSTRUCT) != 0 ||
-                (props[i].flags & ParamFlags.CONSTRUCT_ONLY) != 0)
+            if ((props[i].flags & GLib.ParamFlags.CONSTRUCT) != 0 ||
+                (props[i].flags & GLib.ParamFlags.CONSTRUCT_ONLY) != 0)
             {
                 result.resize (result.length + 1);
                 result[result.length - 1] = props[i];
@@ -102,7 +102,7 @@ public class Vadi.Container : Object
         return result;
     }
 
-    private (unowned string)[] get_matched_property_names ((unowned ParamSpec)[] props)
+    private (unowned string)[] get_matched_property_names ((unowned GLib.ParamSpec)[] props)
     {
         (unowned string)[] names = new (unowned string)[0];
 
@@ -132,15 +132,15 @@ public class Vadi.Container : Object
         return names;
     }
 
-    private Value[] get_matched_property_values ((unowned ParamSpec)[] props)
+    private GLib.Value[] get_matched_property_values ((unowned GLib.ParamSpec)[] props)
     {
-        Value[] values = new Value[0];
+        GLib.Value[] values = new GLib.Value[0];
 
         for (var i = 0; i < props.length; i++) {
             foreach (var key_type in this._instances.keys) {
                 if (props[i].value_type == key_type) {
                     values.resize (values.length + 1);
-                    var @value = Value (key_type);
+                    var @value = GLib.Value (key_type);
                     @value.set_object (this.resolve (key_type));
                     values[values.length - 1] = @value;
                 }
@@ -149,7 +149,7 @@ public class Vadi.Container : Object
             foreach (var key_type in this._factories.keys) {
                 if (props[i].value_type == key_type) {
                     values.resize (values.length + 1);
-                    var @value = Value (key_type);
+                    var @value = GLib.Value (key_type);
                     @value.set_object (this.resolve (key_type));
                     values[values.length - 1] = @value;
                 }
@@ -158,7 +158,7 @@ public class Vadi.Container : Object
             foreach (var key_type in this._types.keys) {
                 if (props[i].value_type == key_type) {
                     values.resize (values.length + 1);
-                    var @value = Value (key_type);
+                    var @value = GLib.Value (key_type);
                     @value.set_object (this.resolve (key_type));
                     values[values.length - 1] = @value;
                 }
@@ -175,9 +175,9 @@ public class Vadi.Container : Object
 
     construct
     {
-        this._types     = new Gee.HashMap<Type, Type> ();
-        this._factories = new Gee.HashMap<Type, Vadi.ContainerFactoryFunc> ();
-        this._instances = new Gee.HashMap<Type, Object> ();
+        this._types     = new Gee.HashMap<GLib.Type, GLib.Type> ();
+        this._factories = new Gee.HashMap<GLib.Type, ContainerFactoryFunc> ();
+        this._instances = new Gee.HashMap<GLib.Type, GLib.Object> ();
     }
 
     /* End GObject blocks */
