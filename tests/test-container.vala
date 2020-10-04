@@ -19,18 +19,20 @@ interface Service : Object {}
 
 class FoodService : Service, Object {}
 
-class Client : Object {
-
+class Client : Object
+{
     public Service service { get; construct; }
 
-    public Client (Service service) {
+    public Client (Service service)
+    {
         Object (
             service: service
         );
     }
 }
 
-int main (string[] args) {
+int main (string[] args)
+{
     Test.init (ref args);
 
     Test.add_func ("/vadi/container/resolve/iface", () => {
