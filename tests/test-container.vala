@@ -147,7 +147,7 @@ int main (string[] args)
         var container = new Vadi.Container ();
         var food_service = new FoodService ();
 
-        container.register_instance (typeof (Service), food_service);
+        container.register_instance<Service> (food_service);
 
         GLib.Object service = container.resolve (typeof (Service));
 
@@ -188,7 +188,7 @@ int main (string[] args)
         var container = new Vadi.Container ();
         var food_service = new FoodService ();
 
-        container.register_instance (typeof (Service), food_service);
+        container.register_instance<Service> (food_service);
 
         GLib.Object client = container.resolve (typeof (Client));
 
@@ -201,7 +201,7 @@ int main (string[] args)
         var container = new Vadi.Container ();
         var food_service = new FoodService ();
 
-        container.register_instance (typeof (Service), food_service);
+        container.register_instance<Service> (food_service);
         container.register_factory<Client> (container => {
             return new Client ((Service) container.resolve (typeof (Service)));
         });

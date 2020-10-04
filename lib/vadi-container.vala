@@ -45,11 +45,11 @@ public class Vadi.Container : GLib.Object
         this._factories[typeof (K)] = container_factory;
     }
 
-    public void register_instance (GLib.Type key_type, GLib.Object instance)
-        requires (key_type.is_interface () || key_type.is_object ())
-        requires (instance.get_type ().is_a (key_type))
+    public void register_instance<K> (K instance)
+        requires (typeof (K).is_interface () || typeof (K).is_object ())
+        requires (instance is K)
     {
-        this._instances[key_type] = instance;
+        this._instances[typeof (K)] = (GLib.Object) instance;
     }
 
     public GLib.Object? resolve (GLib.Type type)
