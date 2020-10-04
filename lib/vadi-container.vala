@@ -60,17 +60,18 @@ public class Vadi.Container : GLib.Object
         }
 
         if (this._factories.has_key (type)) {
-            var factory = this._factories[type];
-            this._instances[type] = factory (this);
+            ContainerFactoryFunc factory = this._factories[type];
+            this._instances[type]        = factory (this);
             return this._instances[type];
         }
 
-        var resolve_type = this._types.has_key (type) ? this._types[type] : type;
+        GLib.Type resolve_type = this._types.has_key (type) ? this._types[type] : type;
 
         if (resolve_type.is_object ()) {
-            var props  = this.get_construct_properties (resolve_type);
-            var names  = this.get_matched_property_names (props);
-            var values = this.get_matched_property_values (props);
+            (unowned GLib.ParamSpec)[] props = this.get_construct_properties (resolve_type);
+
+            (unowned string)[] names = this.get_matched_property_names (props);
+            GLib.Value[] values      = this.get_matched_property_values (props);
 
             this._instances[type] = GLib.Object.new_with_properties (resolve_type, names, values);
             return this._instances[type];
@@ -87,8 +88,9 @@ public class Vadi.Container : GLib.Object
     private (unowned GLib.ParamSpec)[] get_construct_properties (GLib.Type type)
     {
         var klass = (GLib.ObjectClass) type.class_ref ();
-        var props = klass.list_properties ();
-        (unowned GLib.ParamSpec)[] result = new (unowned GLib.ParamSpec)[0];
+        (unowned GLib.ParamSpec)[] props = klass.list_properties ();
+
+        var result = new (unowned GLib.ParamSpec)[0];
 
         for (var i = 0; i < props.length; i++) {
             if ((props[i].flags & GLib.ParamFlags.CONSTRUCT) != 0 ||
@@ -104,24 +106,24 @@ public class Vadi.Container : GLib.Object
 
     private (unowned string)[] get_matched_property_names ((unowned GLib.ParamSpec)[] props)
     {
-        (unowned string)[] names = new (unowned string)[0];
+        var names = new (unowned string)[0];
 
         for (var i = 0; i < props.length; i++) {
-            foreach (var key_type in this._instances.keys) {
+            foreach (GLib.Type key_type in this._instances.keys) {
                 if (props[i].value_type == key_type) {
                     names.resize (names.length + 1);
                     names[names.length - 1] = props[i].name;
                 }
             }
 
-            foreach (var key_type in this._factories.keys) {
+            foreach (GLib.Type key_type in this._factories.keys) {
                 if (props[i].value_type == key_type) {
                     names.resize (names.length + 1);
                     names[names.length - 1] = props[i].name;
                 }
             }
 
-            foreach (var key_type in this._types.keys) {
+            foreach (GLib.Type key_type in this._types.keys) {
                 if (props[i].value_type == key_type) {
                     names.resize (names.length + 1);
                     names[names.length - 1] = props[i].name;
@@ -134,10 +136,10 @@ public class Vadi.Container : GLib.Object
 
     private GLib.Value[] get_matched_property_values ((unowned GLib.ParamSpec)[] props)
     {
-        GLib.Value[] values = new GLib.Value[0];
+        var values = new GLib.Value[0];
 
         for (var i = 0; i < props.length; i++) {
-            foreach (var key_type in this._instances.keys) {
+            foreach (GLib.Type key_type in this._instances.keys) {
                 if (props[i].value_type == key_type) {
                     values.resize (values.length + 1);
                     var @value = GLib.Value (key_type);
@@ -146,7 +148,7 @@ public class Vadi.Container : GLib.Object
                 }
             }
 
-            foreach (var key_type in this._factories.keys) {
+            foreach (GLib.Type key_type in this._factories.keys) {
                 if (props[i].value_type == key_type) {
                     values.resize (values.length + 1);
                     var @value = GLib.Value (key_type);
@@ -155,7 +157,7 @@ public class Vadi.Container : GLib.Object
                 }
             }
 
-            foreach (var key_type in this._types.keys) {
+            foreach (GLib.Type key_type in this._types.keys) {
                 if (props[i].value_type == key_type) {
                     values.resize (values.length + 1);
                     var @value = GLib.Value (key_type);
