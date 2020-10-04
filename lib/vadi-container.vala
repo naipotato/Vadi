@@ -22,9 +22,9 @@ public class Vadi.Container : Object
 {
     /* Private fields */
 
-    private Gee.Map<Type, Type> _types;
+    private Gee.Map<Type, Type>                      _types;
     private Gee.Map<Type, Vadi.ContainerFactoryFunc> _factories;
-    private Gee.Map<Type, Object> _instances;
+    private Gee.Map<Type, Object>                    _instances;
 
     /* End private fields */
 
@@ -68,8 +68,8 @@ public class Vadi.Container : Object
         var resolve_type = this._types.has_key (type) ? this._types[type] : type;
 
         if (resolve_type.is_object ()) {
-            var props = this.get_construct_properties (resolve_type);
-            var names = this.get_matched_property_names (props);
+            var props  = this.get_construct_properties (resolve_type);
+            var names  = this.get_matched_property_names (props);
             var values = this.get_matched_property_values (props);
 
             this._instances[type] = Object.new_with_properties (resolve_type, names, values);
@@ -175,7 +175,7 @@ public class Vadi.Container : Object
 
     construct
     {
-        this._types = new Gee.HashMap<Type, Type> ();
+        this._types     = new Gee.HashMap<Type, Type> ();
         this._factories = new Gee.HashMap<Type, Vadi.ContainerFactoryFunc> ();
         this._instances = new Gee.HashMap<Type, Object> ();
     }
