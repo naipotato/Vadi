@@ -47,7 +47,7 @@ int main (string[] args)
     GLib.Test.add_func ("/vadi/container/resolve/iface", () => {
         var container = new Vadi.Container ();
 
-        var service = container.resolve (typeof (Service));
+        GLib.Object service = container.resolve (typeof (Service));
 
         GLib.assert_null (service);
     });
@@ -55,7 +55,7 @@ int main (string[] args)
     GLib.Test.add_func ("/vadi/container/register/none", () => {
         var container = new Vadi.Container ();
 
-        var service = container.resolve (typeof (FoodService));
+        GLib.Object service = container.resolve (typeof (FoodService));
 
         GLib.assert_nonnull (service);
         GLib.assert_true (service.get_type ().is_a (typeof (FoodService)));
@@ -66,7 +66,7 @@ int main (string[] args)
 
         container.register_type (typeof (Service), typeof (FoodService));
 
-        var service = (Service) container.resolve (typeof (Service));
+        GLib.Object service = container.resolve (typeof (Service));
 
         GLib.assert_nonnull (service);
         GLib.assert_true (service.get_type ().is_a (typeof (FoodService)));
@@ -77,8 +77,8 @@ int main (string[] args)
 
         container.register_type (typeof (Service), typeof (FoodService));
 
-        var service_a = (Service) container.resolve (typeof (Service));
-        var service_b = (Service) container.resolve (typeof (Service));
+        GLib.Object service_a = container.resolve (typeof (Service));
+        GLib.Object service_b = container.resolve (typeof (Service));
 
         GLib.assert_nonnull (service_a);
         GLib.assert_nonnull (service_b);
@@ -93,7 +93,7 @@ int main (string[] args)
 
         container.register_type (typeof (Service), typeof (FoodService));
 
-        var client = container.resolve (typeof (Client));
+        GLib.Object client = container.resolve (typeof (Client));
 
         GLib.assert_nonnull (client);
         GLib.assert_nonnull (((Client) client).service);
@@ -106,7 +106,7 @@ int main (string[] args)
         container.register_type (typeof (Service), typeof (FoodService));
         container.register_type (typeof (Client), typeof (Client));
 
-        var client = container.resolve (typeof (Client));
+        GLib.Object client = container.resolve (typeof (Client));
 
         GLib.assert_nonnull (client);
         GLib.assert_nonnull (((Client) client).service);
@@ -120,7 +120,7 @@ int main (string[] args)
             return new FoodService ();
         });
 
-        var service = (Service) container.resolve (typeof (Service));
+        GLib.Object service = (Service) container.resolve (typeof (Service));
 
         GLib.assert_nonnull (service);
         GLib.assert_true (service.get_type ().is_a (typeof (FoodService)));
@@ -136,7 +136,7 @@ int main (string[] args)
             return new Client ((Service) container.resolve (typeof (Service)));
         });
 
-        var client = container.resolve (typeof (Client));
+        GLib.Object client = container.resolve (typeof (Client));
 
         GLib.assert_nonnull (client);
         GLib.assert_nonnull (((Client) client).service);
@@ -149,7 +149,7 @@ int main (string[] args)
 
         container.register_instance (typeof (Service), food_service);
 
-        var service = container.resolve (typeof (Service));
+        GLib.Object service = container.resolve (typeof (Service));
 
         GLib.assert_nonnull (service);
         GLib.assert_true (service == food_service);
@@ -163,7 +163,7 @@ int main (string[] args)
             return new Client ((Service) container.resolve (typeof (Service)));
         });
 
-        var client = container.resolve (typeof (Client));
+        GLib.Object client = container.resolve (typeof (Client));
 
         GLib.assert_nonnull (client);
         GLib.assert_nonnull (((Client) client).service);
@@ -177,7 +177,7 @@ int main (string[] args)
             return new FoodService ();
         });
 
-        var client = container.resolve (typeof (Client));
+        GLib.Object client = container.resolve (typeof (Client));
 
         GLib.assert_nonnull (client);
         GLib.assert_nonnull (((Client) client).service);
@@ -190,7 +190,7 @@ int main (string[] args)
 
         container.register_instance (typeof (Service), food_service);
 
-        var client = container.resolve (typeof (Client));
+        GLib.Object client = container.resolve (typeof (Client));
 
         GLib.assert_nonnull (client);
         GLib.assert_nonnull (((Client) client).service);
@@ -206,7 +206,7 @@ int main (string[] args)
             return new Client ((Service) container.resolve (typeof (Service)));
         });
 
-        var client = container.resolve (typeof (Client));
+        GLib.Object client = container.resolve (typeof (Client));
 
         GLib.assert_nonnull (client);
         GLib.assert_nonnull (((Client) client).service);
