@@ -116,7 +116,7 @@ int main (string[] args)
     GLib.Test.add_func ("/vadi/container/register/factory/simple", () => {
         var container = new Vadi.Container ();
 
-        container.register_factory (typeof (Service), container => {
+        container.register_factory<Service> (container => {
             return new FoodService ();
         });
 
@@ -129,10 +129,10 @@ int main (string[] args)
     GLib.Test.add_func ("/vadi/container/register/factory/recursive", () => {
         var container = new Vadi.Container ();
 
-        container.register_factory (typeof (Service), container => {
+        container.register_factory<Service> (container => {
             return new FoodService ();
         });
-        container.register_factory (typeof (Client), container => {
+        container.register_factory<Client> (container => {
             return new Client ((Service) container.resolve (typeof (Service)));
         });
 
@@ -159,7 +159,7 @@ int main (string[] args)
         var container = new Vadi.Container ();
 
         container.register_type (typeof (Service), typeof (FoodService));
-        container.register_factory (typeof (Client), container => {
+        container.register_factory<Client> (container => {
             return new Client ((Service) container.resolve (typeof (Service)));
         });
 
@@ -173,7 +173,7 @@ int main (string[] args)
     GLib.Test.add_func ("/vadi/container/register/mixed/factory-type", () => {
         var container = new Vadi.Container ();
 
-        container.register_factory (typeof (Service), container => {
+        container.register_factory<Service> (container => {
             return new FoodService ();
         });
 
@@ -202,7 +202,7 @@ int main (string[] args)
         var food_service = new FoodService ();
 
         container.register_instance (typeof (Service), food_service);
-        container.register_factory (typeof (Client), container => {
+        container.register_factory<Client> (container => {
             return new Client ((Service) container.resolve (typeof (Service)));
         });
 

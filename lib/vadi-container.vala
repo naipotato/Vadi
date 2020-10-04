@@ -16,7 +16,7 @@
  */
 
 [CCode (has_target = false)]
-public delegate GLib.Object Vadi.ContainerFactoryFunc (Container container);
+public delegate T Vadi.ContainerFactoryFunc<T> (Container container);
 
 public class Vadi.Container : GLib.Object
 {
@@ -39,10 +39,10 @@ public class Vadi.Container : GLib.Object
         this._types[key_type] = value_type;
     }
 
-    public void register_factory (GLib.Type key_type, ContainerFactoryFunc container_factory)
-        requires (key_type.is_interface () || key_type.is_object ())
+    public void register_factory<K> (ContainerFactoryFunc<K> container_factory)
+        requires (typeof (K).is_interface () || typeof (K).is_object ())
     {
-        this._factories[key_type] = container_factory;
+        this._factories[typeof (K)] = container_factory;
     }
 
     public void register_instance (GLib.Type key_type, GLib.Object instance)
@@ -61,7 +61,7 @@ public class Vadi.Container : GLib.Object
 
         if (this._factories.has_key (type)) {
             ContainerFactoryFunc factory = this._factories[type];
-            this._instances[type]        = factory (this);
+            this._instances[type]        = (GLib.Object) factory (this);
 
             return this._instances[type];
         }
