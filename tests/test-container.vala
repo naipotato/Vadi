@@ -77,15 +77,15 @@ int main (string[] args)
 
         container.register_type (typeof (Service), typeof (FoodService));
 
-        var serviceA = (Service) container.resolve (typeof (Service));
-        var serviceB = (Service) container.resolve (typeof (Service));
+        var service_a = (Service) container.resolve (typeof (Service));
+        var service_b = (Service) container.resolve (typeof (Service));
 
-        GLib.assert_nonnull (serviceA);
-        GLib.assert_nonnull (serviceB);
-        GLib.assert_true (serviceA.get_type ().is_a (typeof (FoodService)));
-        GLib.assert_true (serviceB.get_type ().is_a (typeof (FoodService)));
+        GLib.assert_nonnull (service_a);
+        GLib.assert_nonnull (service_b);
+        GLib.assert_true (service_a.get_type ().is_a (typeof (FoodService)));
+        GLib.assert_true (service_b.get_type ().is_a (typeof (FoodService)));
 
-        GLib.assert_true (serviceA == serviceB);
+        GLib.assert_true (service_a == service_b);
     });
 
     GLib.Test.add_func ("/vadi/container/register/type/recursive", () => {
