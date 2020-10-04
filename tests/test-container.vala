@@ -21,7 +21,14 @@ class FoodService : Service, Object {}
 
 class Client : Object
 {
+    /* Public properties */
+
     public Service service { get; construct; }
+
+    /* End public properties */
+
+
+    /* Public constructors */
 
     public Client (Service service)
     {
@@ -29,6 +36,8 @@ class Client : Object
             service: service
         );
     }
+
+    /* End public constructors */
 }
 
 int main (string[] args)
