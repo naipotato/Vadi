@@ -15,7 +15,6 @@ vadi_gi_name = 'Vadi-@0@'.format (vadi_api_version)
 vadi_header = '@0@.h'.format (meson.project_name ())
 vadi_vapi = '@0@.vapi'.format (vadi_api_name)
 vadi_gir = '@0@.gir'.format (vadi_gi_name)
-vadi_typelib = '@0@.typelib'.format (vadi_gi_name)
 vadi_pc = '@0@.pc'.format (vadi_api_name)
 vadi_deps = '@0@.deps'.format (vadi_api_name)
 
@@ -35,25 +34,6 @@ vadi = library (
     dependencies: deps,
          install: true,
      install_dir: [true, true, true, true]
-)
-
-g_ir_compiler = find_program ('g-ir-compiler')
-
-custom_target (
-    vadi_typelib,
-    command: [
-        g_ir_compiler,
-        '--shared-library',
-        vadi.full_path (),
-        '--output',
-        '@OUTPUT@',
-        meson.current_build_dir () / vadi_gir
-    ],
-
-         output: vadi_typelib,
-        depends: vadi,
-        install: true,
-    install_dir: get_option ('libdir') / 'girepository-1.0'
 )
 
 vadi_dep = declare_dependency (
