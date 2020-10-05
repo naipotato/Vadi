@@ -47,7 +47,7 @@ int main (string[] args)
     GLib.Test.add_func ("/vadi/container/resolve/interface", () => {
         var container = new Vadi.Container ();
 
-        Service service = container.resolve<Service> ();
+        Service? service = container.resolve<Service> ();
 
         GLib.assert_null (service);
     });
@@ -55,7 +55,7 @@ int main (string[] args)
     GLib.Test.add_func ("/vadi/container/register/none", () => {
         var container = new Vadi.Container ();
 
-        FoodService service = container.resolve<FoodService> ();
+        FoodService? service = container.resolve<FoodService> ();
 
         GLib.assert_nonnull (service);
     });
@@ -76,8 +76,8 @@ int main (string[] args)
 
         container.register_type<Service, FoodService> ();
 
-        Service service_a = container.resolve<Service> ();
-        Service service_b = container.resolve<Service> ();
+        Service? service_a = container.resolve<Service> ();
+        Service? service_b = container.resolve<Service> ();
 
         GLib.assert_nonnull (service_a);
         GLib.assert_nonnull (service_b);
@@ -92,7 +92,7 @@ int main (string[] args)
 
         container.register_type<Service, FoodService> ();
 
-        Client client = container.resolve<Client> ();
+        Client? client = container.resolve<Client> ();
 
         GLib.assert_nonnull (client);
         GLib.assert_nonnull (client.service);
@@ -105,7 +105,7 @@ int main (string[] args)
         container.register_type<Service, FoodService> ();
         container.register_type<Client, Client> ();
 
-        Client client = container.resolve<Client> ();
+        Client? client = container.resolve<Client> ();
 
         GLib.assert_nonnull (client);
         GLib.assert_nonnull (client.service);
@@ -119,7 +119,7 @@ int main (string[] args)
             return new FoodService ();
         });
 
-        Service service = container.resolve<Service> ();
+        Service? service = container.resolve<Service> ();
 
         GLib.assert_nonnull (service);
         GLib.assert_true (service is FoodService);
@@ -135,7 +135,7 @@ int main (string[] args)
             return new Client (container.resolve<Service> ());
         });
 
-        Client client = container.resolve<Client> ();
+        Client? client = container.resolve<Client> ();
 
         GLib.assert_nonnull (client);
         GLib.assert_nonnull (client.service);
@@ -148,7 +148,7 @@ int main (string[] args)
 
         container.register_instance<Service> (food_service);
 
-        Service service = container.resolve<Service> ();
+        Service? service = container.resolve<Service> ();
 
         GLib.assert_nonnull (service);
         GLib.assert_true (service == food_service);
@@ -162,7 +162,7 @@ int main (string[] args)
             return new Client (container.resolve<Service> ());
         });
 
-        Client client = container.resolve<Client> ();
+        Client? client = container.resolve<Client> ();
 
         GLib.assert_nonnull (client);
         GLib.assert_nonnull (client.service);
@@ -176,7 +176,7 @@ int main (string[] args)
             return new FoodService ();
         });
 
-        Client client = container.resolve<Client> ();
+        Client? client = container.resolve<Client> ();
 
         GLib.assert_nonnull (client);
         GLib.assert_nonnull (client.service);
@@ -189,7 +189,7 @@ int main (string[] args)
 
         container.register_instance<Service> (food_service);
 
-        Client client = container.resolve<Client> ();
+        Client? client = container.resolve<Client> ();
 
         GLib.assert_nonnull (client);
         GLib.assert_nonnull (client.service);
@@ -205,7 +205,7 @@ int main (string[] args)
             return new Client (container.resolve<Service> ());
         });
 
-        Client client = container.resolve<Client> ();
+        Client? client = container.resolve<Client> ();
 
         GLib.assert_nonnull (client);
         GLib.assert_nonnull (client.service);
