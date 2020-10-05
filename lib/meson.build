@@ -10,11 +10,9 @@ vadi_micro_version = version_array[2].to_int ()
 
 vadi_api_version = '@0@.0'.format (vadi_major_version)
 vadi_api_name = '@0@-@1@'.format (meson.project_name (), vadi_api_version)
-vadi_gi_name = 'Vadi-@0@'.format (vadi_api_version)
 
 vadi_header = '@0@.h'.format (meson.project_name ())
 vadi_vapi = '@0@.vapi'.format (vadi_api_name)
-vadi_gir = '@0@.gir'.format (vadi_gi_name)
 vadi_pc = '@0@.pc'.format (vadi_api_name)
 vadi_deps = '@0@.deps'.format (vadi_api_name)
 
@@ -30,10 +28,9 @@ vadi = library (
 
      vala_header: vadi_header,
        vala_vapi: vadi_vapi,
-        vala_gir: vadi_gir,
     dependencies: deps,
          install: true,
-     install_dir: [true, true, true, true]
+     install_dir: [true, true, true]
 )
 
 vadi_dep = declare_dependency (
