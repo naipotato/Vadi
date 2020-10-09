@@ -31,6 +31,12 @@ public class Vadi.Container : GLib.Object
 
     /* Public methods */
 
+    /**
+     * Sets that ``K`` must be resolved with an instance of ``V``.
+     *
+     * This method is especially useful when your class dependencies are
+     * interfaces or abstract classes.
+     */
     public void register_type<K, V> ()
         requires (typeof (K).is_interface () || typeof (K).is_object ())
         requires (typeof (V).is_object ())
@@ -39,12 +45,31 @@ public class Vadi.Container : GLib.Object
         this._types[typeof (K)] = typeof (V);
     }
 
+    /**
+     * Sets that ``K`` must be resolved with the instance returned by the
+     * indicated factory.
+     *
+     * This method is useful when you need to tell the container to perform
+     * additional procedure when instantiating the corresponding dependency.
+     *
+     * @param container_factory The factory that the container must use to
+     *                          resolve the dependency.
+     */
     public void register_factory<K> (ContainerFactoryFunc<K> container_factory)
         requires (typeof (K).is_interface () || typeof (K).is_object ())
     {
         this._factories[typeof (K)] = container_factory;
     }
 
+    /**
+     * Sets that ``K`` must be resolved with the indicated instance.
+     *
+     * This method is useful when you already have the dependency pre-built and
+     * you just want the container to allocate it where needed.
+     *
+     * @param instance The instance that the container must use to resolve the
+     *                 dependency.
+     */
     public void register_instance<K> (K instance)
         requires (typeof (K).is_interface () || typeof (K).is_object ())
         requires (instance is K)
@@ -52,6 +77,27 @@ public class Vadi.Container : GLib.Object
         this._instances[typeof (K)] = (GLib.Object) instance;
     }
 
+    /**
+     * Returns an instance of the specified type, trying to resolve all
+     * possible dependencies.
+     *
+     * When executing this method, {@link Vadi.Container} will check the
+     * specified type and act differently depending on the case:
+     *
+     *  * If it's an unregistered interface, it'll return null.
+     *  * If it's a registered interface, an instance of the type specified by
+     *    the registry will be returned, recursively resolving its dependencies.
+     *  * If it's an unregistered class, its dependencies will be recursively
+     *    resolved and then instantiated and returned.
+     *  * If it's a registered class, an instance of the type specified by the
+     *    registry will be returned, resolving its dependencies recursively.
+     *
+     * ''Note:'' Dependencies registered with a factory or an instance will not
+     * see their dependencies resolved, since, in the case of the factory, this
+     * work is delegated to the factory itself.
+     *
+     * @return An instance of the specified type, or ``null``.
+     */
     public T? resolve<T> ()
         requires (typeof (T).is_interface () || typeof (T).is_object ())
     {
