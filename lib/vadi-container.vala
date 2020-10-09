@@ -61,6 +61,15 @@ public class Vadi.Container : GLib.Object
         this._factories[typeof (K)] = container_factory;
     }
 
+    /**
+     * Sets that ``K`` must be resolved with the indicated instance.
+     *
+     * This method is useful when you already have the dependency pre-built and
+     * you just want the container to allocate it where needed.
+     *
+     * @param instance The instance that the container must use to resolve the
+     *                 dependency.
+     */
     public void register_instance<K> (K instance)
         requires (typeof (K).is_interface () || typeof (K).is_object ())
         requires (instance is K)
