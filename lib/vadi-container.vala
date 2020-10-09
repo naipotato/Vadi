@@ -77,6 +77,27 @@ public class Vadi.Container : GLib.Object
         this._instances[typeof (K)] = (GLib.Object) instance;
     }
 
+    /**
+     * Returns an instance of the specified type, trying to resolve all
+     * possible dependencies.
+     *
+     * When executing this method, {@link Vadi.Container} will check the
+     * specified type and act differently depending on the case:
+     *
+     *  * If it's an unregistered interface, it'll return null.
+     *  * If it's a registered interface, an instance of the type specified by
+     *    the registry will be returned, recursively resolving its dependencies.
+     *  * If it's an unregistered class, its dependencies will be recursively
+     *    resolved and then instantiated and returned.
+     *  * If it's a registered class, an instance of the type specified by the
+     *    registry will be returned, resolving its dependencies recursively.
+     *
+     * ''Note:'' Dependencies registered with a factory or an instance will not
+     * see their dependencies resolved, since, in the case of the factory, this
+     * work is delegated to the factory itself.
+     *
+     * @return An instance of the specified type, or ``null``.
+     */
     public T? resolve<T> ()
         requires (typeof (T).is_interface () || typeof (T).is_object ())
     {
