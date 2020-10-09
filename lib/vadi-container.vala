@@ -31,6 +31,12 @@ public class Vadi.Container : GLib.Object
 
     /* Public methods */
 
+    /**
+     * Sets that ``K`` must be resolved with an instance of ``V``.
+     *
+     * This method is especially useful when your class dependencies are
+     * interfaces or abstract classes.
+     */
     public void register_type<K, V> ()
         requires (typeof (K).is_interface () || typeof (K).is_object ())
         requires (typeof (V).is_object ())
