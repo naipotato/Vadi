@@ -45,6 +45,16 @@ public class Vadi.Container : GLib.Object
         this._types[typeof (K)] = typeof (V);
     }
 
+    /**
+     * Sets that ``K`` must be resolved with the instance returned by the
+     * indicated factory.
+     *
+     * This method is useful when you need to tell the container to perform
+     * additional procedure when instantiating the corresponding dependency.
+     *
+     * @param container_factory The factory that the container must use to
+     *                          resolve the dependency.
+     */
     public void register_factory<K> (ContainerFactoryFunc<K> container_factory)
         requires (typeof (K).is_interface () || typeof (K).is_object ())
     {
