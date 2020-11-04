@@ -15,9 +15,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-[CCode (has_target = false)]
-public delegate T Vadi.ContainerFactoryFunc<T> (Container container);
-
 public class Vadi.Container : GLib.Object
 {
     /* Private fields */
