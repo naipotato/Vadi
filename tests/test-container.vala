@@ -142,6 +142,21 @@ int main (string[] args)
         GLib.assert_true (client.service is FoodService);
     });
 
+    GLib.Test.add_func ("/vadi/container/register/factory/use-local-variables", () => {
+        var container = new Vadi.Container ();
+        var food_service = new FoodService ();
+
+        container.register_factory<Client> (container => {
+            return new Client (food_service);
+        });
+
+        Client? client = container.resolve<Client> ();
+
+        GLib.assert_nonnull (client);
+        GLib.assert_nonnull (client.service);
+        GLib.assert_true (client.service == food_service);
+    });
+
     GLib.Test.add_func ("/vadi/container/register/instance/simple", () => {
         var container = new Vadi.Container ();
         var food_service = new FoodService ();
