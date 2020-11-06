@@ -40,6 +40,27 @@ class Client : GLib.Object
     /* End public constructors */
 }
 
+class Client2 : GLib.Object
+{
+    /* Public properties */
+
+    public FoodService food_service { get; construct; }
+
+    /* End public properties */
+
+
+    /* Public constructors */
+
+    public Client2 (FoodService food_service)
+    {
+        GLib.Object (
+            food_service: food_service
+        );
+    }
+
+    /* End public constructors */
+}
+
 int main (string[] args)
 {
     GLib.Test.init (ref args);
@@ -52,12 +73,21 @@ int main (string[] args)
         GLib.assert_null (service);
     });
 
-    GLib.Test.add_func ("/vadi/container/register/none", () => {
+    GLib.Test.add_func ("/vadi/container/register/none/simple", () => {
         var container = new Vadi.Container ();
 
         FoodService? service = container.resolve<FoodService> ();
 
         GLib.assert_nonnull (service);
+    });
+
+    GLib.Test.add_func ("/vadi/container/register/none/recursive", () => {
+        var container = new Vadi.Container ();
+
+        Client2? client_2 = container.resolve<Client2> ();
+
+        GLib.assert_nonnull (client_2);
+        GLib.assert_nonnull (client_2.food_service);
     });
 
     GLib.Test.add_func ("/vadi/container/register/type/simple", () => {
