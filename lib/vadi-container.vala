@@ -84,8 +84,26 @@ public class Vadi.Container : GLib.Object
         var names = new (unowned string)[0];
 
         for (var i = 0; i < props.length; i++) {
-            names.resize (names.length + 1);
-            names[names.length - 1] = props[i].name;
+            foreach (GLib.Type key_type in this._instances.keys) {
+                if (props[i].value_type == key_type) {
+                    names.resize (names.length + 1);
+                    names[names.length - 1] = props[i].name;
+                }
+            }
+
+            foreach (GLib.Type key_type in this._factories.keys) {
+                if (props[i].value_type == key_type) {
+                    names.resize (names.length + 1);
+                    names[names.length - 1] = props[i].name;
+                }
+            }
+
+            foreach (GLib.Type key_type in this._types.keys) {
+                if (props[i].value_type == key_type) {
+                    names.resize (names.length + 1);
+                    names[names.length - 1] = props[i].name;
+                }
+            }
         }
 
         return names;
@@ -96,12 +114,38 @@ public class Vadi.Container : GLib.Object
         var values = new GLib.Value[0];
 
         for (var i = 0; i < props.length; i++) {
-            values.resize (values.length + 1);
+            foreach (GLib.Type key_type in this._instances.keys) {
+                if (props[i].value_type == key_type) {
+                    values.resize (values.length + 1);
 
-            var @value = GLib.Value (props[i].value_type);
-            @value.set_object (this.resolve_type (props[i].value_type));
+                    var @value = GLib.Value (key_type);
+                    @value.set_object (this.resolve_type (key_type));
 
-            values[values.length - 1] = @value;
+                    values[values.length - 1] = @value;
+                }
+            }
+
+            foreach (GLib.Type key_type in this._factories.keys) {
+                if (props[i].value_type == key_type) {
+                    values.resize (values.length + 1);
+
+                    var @value = GLib.Value (key_type);
+                    @value.set_object (this.resolve_type (key_type));
+
+                    values[values.length - 1] = @value;
+                }
+            }
+
+            foreach (GLib.Type key_type in this._types.keys) {
+                if (props[i].value_type == key_type) {
+                    values.resize (values.length + 1);
+
+                    var @value = GLib.Value (key_type);
+                    @value.set_object (this.resolve_type (key_type));
+
+                    values[values.length - 1] = @value;
+                }
+            }
         }
 
         return values;
