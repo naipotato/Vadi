@@ -242,8 +242,8 @@ public class Vdi.ObjectFactory : GLib.Object
 
 	construct
 	{
-		this._instance_map = new GLib.HashTable<GLib.Type, GLib.Object> (GLib.int_hash, GLib.int_equal);
-		this._recipe_map   = new GLib.HashTable<GLib.Type, RecipeFuncClosure> (GLib.int_hash, GLib.int_equal);
-		this._type_map     = new GLib.HashTable<GLib.Type, GLib.Type> (GLib.int_hash, GLib.int_equal);
+		this._instance_map = new GLib.HashTable<GLib.Type, GLib.Object> (GLib.direct_hash, GLib.direct_equal);
+		this._recipe_map   = new GLib.HashTable<GLib.Type, RecipeFuncClosure> (GLib.direct_hash, GLib.direct_equal);
+		this._type_map     = new GLib.HashTable<GLib.Type, GLib.Type> (GLib.direct_hash, GLib.direct_equal);
 	}
 }
