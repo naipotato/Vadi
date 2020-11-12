@@ -1,5 +1,5 @@
 test_container_sources = files (
-    'test-container.vala'
+    'test-object-factory.vala'
 )
 
 test_container = executable (

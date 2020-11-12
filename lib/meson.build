@@ -1,6 +1,6 @@
 sources = files (
-    'vadi-container-factory-func-closure.vala',
-    'vadi-container.vala'
+	'vdi-object-factory.vala',
+	'vdi-recipe-func-closure.vala',
 )
 
 vadi_version = meson.project_version ()
@@ -19,8 +19,7 @@ vadi_deps = '@0@.deps'.format (vadi_api_name)
 
 deps = [
     glib_dep,
-    gobject_dep,
-    gee_dep
+    gobject_dep
 ]
 
 vadi = library (

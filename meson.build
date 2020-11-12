@@ -13,7 +13,6 @@ add_project_arguments (
 
 glib_dep = dependency ('glib-2.0', version: '>= @0@'.format (glib_min_version))
 gobject_dep = dependency ('gobject-2.0', version: '>= @0@'.format (glib_min_version))
-gee_dep = dependency ('gee-0.8')
 
 subdir ('lib')
 

@@ -1,15 +1,14 @@
-# Vadi
+# libvadi
 
-![Continuous Integration](https://github.com/nahuelwexd/Vadi/workflows/Continuous%20Integration/badge.svg)
-[![codecov](https://codecov.io/gh/nahuelwexd/Vadi/branch/main/graph/badge.svg)](https://codecov.io/gh/nahuelwexd/Vadi)
+![Continuous Integration](https://github.com/nahuelwexd/libvadi/workflows/Continuous%20Integration/badge.svg)
+[![codecov](https://codecov.io/gh/nahuelwexd/libvadi/branch/main/graph/badge.svg)](https://codecov.io/gh/nahuelwexd/libvadi)
 
-Vadi is an IoC Container developed in order to facilitate the usage of dependency injection for Vala
-developers, but it can be used on any GObject-compatible language, with more or less syntax
-facilities.
+libvadi is a library mainly focused on providing various utilities to facilitate the use of dependency injection in Vala,
+although it can also be used in other languages compatible with GObject, with more or less syntax facilities.
 
 ## Build & Install
 
-Vadi requires the following dependencies:
+libvadi requires the following dependencies:
 
 - `glib-2.0` (>= 2.54)
 - `gobject-2.0` (>= 2.54)
@@ -26,8 +25,7 @@ sudo ninja -C build install
 
 ## Usage
 
-In order to use Vadi, you need to declare your dependencies as public construct or construct-only
-properties:
+In order to use libvadi, you need to declare your dependencies as public construct or construct-only properties:
 
 ```vala
 public class Client : Object {
