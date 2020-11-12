@@ -110,7 +110,7 @@ int main (string[] args)
 		GLib.Test.trap_subprocess (null, 0, 0);
 		GLib.Test.trap_assert_failed ();
 		GLib.Test.trap_assert_stderr ("*CRITICAL*assertion*failed*");
-	})
+	});
 
 	GLib.Test.add_func ("/vadi/object-factory/order-with-alias/alias-object-dont-match", () => {
 		if (GLib.Test.subprocess ())
