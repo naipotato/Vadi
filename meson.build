@@ -8,6 +8,7 @@ glib_min_version = '2.54'
 add_project_arguments (
     '--hide-internal',
     '--target-glib=@0@'.format (glib_min_version),
+	'--enable-experimental-non-null',
     language: 'vala'
 )
 
