@@ -35,7 +35,7 @@ jobs:
 
       - name: Build Vadi
         run: |
-          meson build --prefix /usr -Db_coverage=true -Dtests=true
+          meson build --prefix /usr -Db_coverage=true -Db_sanitize=address -Dtests=true
           ninja -C build
 
       - name: Test Vadi
