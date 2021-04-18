@@ -22,15 +22,6 @@ on:
 name: Continuous Integration
 
 jobs:
-
-  lint:
-    name: Check linting
-    runs-on: ubuntu-latest
-    continue-on-error: true
-    steps:
-    - uses: actions/checkout@v2.1.0
-    - uses: elementary/actions/vala-lint@master
-
   test:
     name: Test & report coverage
     runs-on: ubuntu-20.04
