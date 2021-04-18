@@ -1,5 +1,5 @@
-option ('tests',
-           type: 'boolean',
-          value: false,
-    description: 'Enable tests'
+option('tests',
+	       type: 'boolean',
+	      value: true,
+	description: 'Enable tests'
 )
