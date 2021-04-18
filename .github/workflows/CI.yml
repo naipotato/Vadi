@@ -25,7 +25,7 @@ jobs:
   test:
     name: Test & report coverage
     runs-on: ubuntu-20.04
-    container: fedora:latest
+    container: fedora:34
     steps:
       - name: Checkout
         uses: actions/checkout@v2.1.0
