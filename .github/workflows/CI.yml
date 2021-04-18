@@ -27,11 +27,11 @@ jobs:
     runs-on: ubuntu-20.04
     container: fedora:34
     steps:
-      - name: Checkout
-        uses: actions/checkout@v2.1.0
-
       - name: Install dependencies
         run: sudo dnf install -y vala libgee-devel glib2-devel gobject-introspection-devel meson lcov git
+
+      - name: Checkout
+        uses: actions/checkout@v2.1.0
 
       - name: Build Vadi
         run: |
