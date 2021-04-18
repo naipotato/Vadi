@@ -25,23 +25,27 @@ jobs:
   test:
     name: Test & report coverage
     runs-on: ubuntu-20.04
+    container: fedora:latest
     steps:
-    - uses: actions/checkout@v2.1.0
-    - name: Install dependencies
-      run: |
-        sudo apt update -y -qq
-        sudo apt install -y -qq valac libgee-0.8-dev meson libglib2.0-dev libgirepository1.0-dev \
-                 lcov
-    - name: Build Vadi
-      run: |
-        meson build --prefix /usr -Db_coverage=true -Dtests=true
-        ninja -C build
-    - name: Test Vadi
-      run: ninja -C build test
-    - name: Report coverage
-      run: |
-        lcov -d build/lib -o lcov.info -c
-        lcov -d build/lib -o lcov.info -r lcov.info "*/build/*"
-        lcov -l lcov.info
-    - name: Upload coverage
-      run: bash <(curl -s https://codecov.io/bash) -f lcov.info
+      - name: Checkout
+        uses: actions/checkout@v2.1.0
+
+      - name: Install dependencies
+        run: sudo dnf install -y vala libgee-devel glib2-devel gobject-introspection-devel meson lcov
+
+      - name: Build Vadi
+        run: |
+          meson build --prefix /usr -Db_coverage=true -Dtests=true
+          ninja -C build
+
+      - name: Test Vadi
+        run: ninja -C build test
+
+      - name: Report coverage
+        run: |
+          lcov -d build/lib -o lcov.info -c
+          lcov -d build/lib -o lcov.info -r lcov.info "*/build/*"
+          lcov -l lcov.info
+
+      - name: Upload coverage
+        run: bash <(curl -s https://codecov.io/bash) -f lcov.info
