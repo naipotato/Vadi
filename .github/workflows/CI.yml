@@ -28,7 +28,7 @@ jobs:
     container: fedora:34
     steps:
       - name: Install dependencies
-        run: sudo dnf install -y vala libgee-devel glib2-devel gobject-introspection-devel meson lcov git
+        run: sudo dnf install -y vala libgee-devel glib2-devel gobject-introspection-devel meson lcov git libasan
 
       - name: Checkout
         uses: actions/checkout@v2.1.0
