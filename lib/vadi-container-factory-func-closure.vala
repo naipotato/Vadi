@@ -22,11 +22,11 @@ public delegate T Vadi.ContainerFactoryFunc<T> (Vadi.Container container);
 [CCode (simple_generics = true)]
 private class Vadi.ContainerFactoryFuncClosure<T> : GLib.Object
 {
-    public ContainerFactoryFunc<T> func;
+	public ContainerFactoryFunc<T> func;
 
 
-    public ContainerFactoryFuncClosure(owned ContainerFactoryFunc<T> func)
-    {
-        this.func = (owned) func;
-    }
+	public ContainerFactoryFuncClosure(owned ContainerFactoryFunc<T> func)
+	{
+		this.func = (owned) func;
+	}
 }

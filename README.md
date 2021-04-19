@@ -32,7 +32,7 @@ properties:
 ```vala
 public class Client : Object {
 
-    public Service service { get; construct; }
+	public Service service { get; construct; }
 }
 ```
 
@@ -48,7 +48,7 @@ container.register_type (typeof (Service), typeof (FoodService));
 // or if you want to use a constructor instead of letting the container solve using the construct
 // properties
 container.register_factory (typeof (Service), container => {
-    return new FoodService (container.resolve (typeof (Database)));
+	return new FoodService (container.resolve (typeof (Database)));
 });
 
 // Finally, if all you want is for the container to return an instance you already have pre-built,

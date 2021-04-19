@@ -1,6 +1,6 @@
 sources = files (
-    'vadi-container-factory-func-closure.vala',
-    'vadi-container.vala'
+	'vadi-container-factory-func-closure.vala',
+	'vadi-container.vala'
 )
 
 vadi_version = meson.project_version ()
@@ -18,49 +18,49 @@ vadi_pc = '@0@.pc'.format (vadi_api_name)
 vadi_deps = '@0@.deps'.format (vadi_api_name)
 
 deps = [
-    glib_dep,
-    gobject_dep,
-    gee_dep
+	glib_dep,
+	gobject_dep,
+	gee_dep
 ]
 
 vadi = library (
-    meson.project_name (),
-    sources,
+	meson.project_name (),
+	sources,
 
-     vala_header: vadi_header,
-       vala_vapi: vadi_vapi,
-    dependencies: deps,
-         install: true,
-     install_dir: [true, true, true]
+	 vala_header: vadi_header,
+	   vala_vapi: vadi_vapi,
+	dependencies: deps,
+	     install: true,
+	 install_dir: [true, true, true]
 )
 
 vadi_dep = declare_dependency (
-              link_with: vadi,
-           dependencies: deps,
-    include_directories: [include_directories ('.')]
+	          link_with: vadi,
+	       dependencies: deps,
+	include_directories: [include_directories ('.')]
 )
 
 pkg = import ('pkgconfig')
 
 pkg.generate (vadi,
-    description: 'IoC Container for Vala',
-       filebase: vadi_api_name,
-            url: 'https://github.com/nahuelwexd/Vadi'
+	description: 'IoC Container for Vala',
+	   filebase: vadi_api_name,
+	        url: 'https://github.com/nahuelwexd/Vadi'
 )
 
 requires = []
 
 foreach dep : deps
-    requires += dep.name ()
+	requires += dep.name ()
 endforeach
 
 deps_conf = configuration_data ()
 deps_conf.set ('deps', '\n'.join (requires))
 
 configure_file (
-            input: 'deps.meson',
-           output: vadi_deps,
-    configuration: deps_conf,
-          install: true,
-      install_dir: get_option ('datadir') / 'vala/vapi'
+	        input: 'deps.meson',
+	       output: vadi_deps,
+	configuration: deps_conf,
+	      install: true,
+	  install_dir: get_option ('datadir') / 'vala/vapi'
 )
