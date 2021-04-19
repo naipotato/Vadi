@@ -18,9 +18,9 @@ vadi_pc = '@0@.pc'.format (vadi_api_name)
 vadi_deps = '@0@.deps'.format (vadi_api_name)
 
 deps = [
-	glib_dep,
-	gobject_dep,
-	gee_dep
+	dependency ('glib-2.0', version: '>=2.54'),
+	dependency ('gobject-2.0', version: '>=2.54'),
+	dependency ('gee-0.8')
 ]
 
 vadi = library (

@@ -3,17 +3,9 @@ project ('vadi', 'c', 'vala',
 	version: '0.1.0'
 )
 
-glib_min_version = '2.54'
-
-add_project_arguments (
-	'--hide-internal',
-	'--target-glib=@0@'.format (glib_min_version),
+add_project_arguments ('--hide-internal', '--enable-checking', '--abi-stability',
 	language: 'vala'
 )
-
-glib_dep = dependency ('glib-2.0', version: '>= @0@'.format (glib_min_version))
-gobject_dep = dependency ('gobject-2.0', version: '>= @0@'.format (glib_min_version))
-gee_dep = dependency ('gee-0.8')
 
 subdir ('lib')
 
