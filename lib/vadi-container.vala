@@ -15,18 +15,10 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-public class Vadi.Container : GLib.Object
-{
-	/* Private fields */
-
+public class Vadi.Container : GLib.Object {
 	private Gee.Map<GLib.Type, GLib.Type>                   _types;
 	private Gee.Map<GLib.Type, ContainerFactoryFuncClosure> _factories;
 	private Gee.Map<GLib.Type, GLib.Object>                 _instances;
-
-	/* End private fields */
-
-
-	/* Public methods */
 
 	public void register_type<K, V> ()
 		requires (typeof (K).is_interface () || typeof (K).is_object ())
@@ -49,28 +41,18 @@ public class Vadi.Container : GLib.Object
 		this._instances[typeof (K)] = (GLib.Object) instance;
 	}
 
-	public T? resolve<T> ()
-		requires (typeof (T).is_interface () || typeof (T).is_object ())
-	{
+	public T? resolve<T> () requires (typeof (T).is_interface () || typeof (T).is_object ()) {
 		return this.resolve_type (typeof (T));
 	}
 
-	/* End public methods */
-
-
-	/* Private methods */
-
-	private (unowned GLib.ParamSpec)[] get_construct_properties (GLib.Type type)
-	{
+	private (unowned GLib.ParamSpec)[] get_construct_properties (GLib.Type type) {
 		var klass = (GLib.ObjectClass) type.class_ref ();
 		(unowned GLib.ParamSpec)[] props = klass.list_properties ();
 
 		var result = new (unowned GLib.ParamSpec)[0];
 
 		for (var i = 0; i < props.length; i++) {
-			if ((props[i].flags & GLib.ParamFlags.CONSTRUCT) != 0 ||
-				(props[i].flags & GLib.ParamFlags.CONSTRUCT_ONLY) != 0)
-			{
+			if ((props[i].flags & GLib.ParamFlags.CONSTRUCT) != 0 || (props[i].flags & GLib.ParamFlags.CONSTRUCT_ONLY) != 0) {
 				result.resize (result.length + 1);
 				result[result.length - 1] = props[i];
 			}
@@ -79,8 +61,7 @@ public class Vadi.Container : GLib.Object
 		return result;
 	}
 
-	private (unowned string)[] get_matched_property_names ((unowned GLib.ParamSpec)[] props)
-	{
+	private (unowned string)[] get_matched_property_names ((unowned GLib.ParamSpec)[] props) {
 		var names = new (unowned string)[0];
 
 		for (var i = 0; i < props.length; i++) {
@@ -109,8 +90,7 @@ public class Vadi.Container : GLib.Object
 		return names;
 	}
 
-	private GLib.Value[] get_matched_property_values ((unowned GLib.ParamSpec)[] props)
-	{
+	private GLib.Value[] get_matched_property_values ((unowned GLib.ParamSpec)[] props) {
 		var values = new GLib.Value[0];
 
 		for (var i = 0; i < props.length; i++) {
@@ -151,8 +131,7 @@ public class Vadi.Container : GLib.Object
 		return values;
 	}
 
-	private GLib.Object? resolve_type (GLib.Type type)
-	{
+	private GLib.Object? resolve_type (GLib.Type type) {
 		if (this._instances.has_key (type)) {
 			return this._instances[type];
 		}
@@ -179,17 +158,9 @@ public class Vadi.Container : GLib.Object
 		return null;
 	}
 
-	/* End private methods */
-
-
-	/* GObject blocks */
-
-	construct
-	{
+	construct {
 		this._types     = new Gee.HashMap<GLib.Type, GLib.Type> ();
 		this._factories = new Gee.HashMap<GLib.Type, ContainerFactoryFuncClosure> ();
 		this._instances = new Gee.HashMap<GLib.Type, GLib.Object> ();
 	}
-
-	/* End GObject blocks */
 }

@@ -19,29 +19,17 @@ interface Service : GLib.Object {}
 
 class FoodService : Service, GLib.Object {}
 
-class Client : GLib.Object
-{
-	/* Public properties */
-
+class Client : GLib.Object {
 	public Service service { get; construct; }
 
-	/* End public properties */
-
-
-	/* Public constructors */
-
-	public Client (Service service)
-	{
+	public Client (Service service) {
 		GLib.Object (
 			service: service
 		);
 	}
-
-	/* End public constructors */
 }
 
-int main (string[] args)
-{
+int main (string[] args) {
 	GLib.Test.init (ref args);
 
 	GLib.Test.add_func ("/vadi/container/resolve/interface", () => {
