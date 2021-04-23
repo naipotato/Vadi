@@ -1,5 +1,5 @@
 sources = files (
-	'vadi-container-factory-func-closure.vala',
+	'vadi-factory-func-closure.vala',
 	'vadi-container.vala'
 )
 

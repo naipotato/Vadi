@@ -17,7 +17,7 @@
 
 public class Vadi.Container : GLib.Object {
 	private Gee.Map<GLib.Type, GLib.Type>                   _types;
-	private Gee.Map<GLib.Type, ContainerFactoryFuncClosure> _factories;
+	private Gee.Map<GLib.Type, FactoryFuncClosure> _factories;
 	private Gee.Map<GLib.Type, GLib.Object>                 _instances;
 
 	public void register_type<K, V> ()
@@ -28,10 +28,10 @@ public class Vadi.Container : GLib.Object {
 		this._types[typeof (K)] = typeof (V);
 	}
 
-	public void register_factory<K> (owned ContainerFactoryFunc<K> container_factory)
+	public void register_factory<K> (owned FactoryFunc<K> container_factory)
 		requires (typeof (K).is_interface () || typeof (K).is_object ())
 	{
-		this._factories[typeof (K)] = new ContainerFactoryFuncClosure<K> ((owned) container_factory);
+		this._factories[typeof (K)] = new FactoryFuncClosure<K> ((owned) container_factory);
 	}
 
 	public void register_instance<K> (K instance)
@@ -160,7 +160,7 @@ public class Vadi.Container : GLib.Object {
 
 	construct {
 		this._types     = new Gee.HashMap<GLib.Type, GLib.Type> ();
-		this._factories = new Gee.HashMap<GLib.Type, ContainerFactoryFuncClosure> ();
+		this._factories = new Gee.HashMap<GLib.Type, FactoryFuncClosure> ();
 		this._instances = new Gee.HashMap<GLib.Type, GLib.Object> ();
 	}
 }
