@@ -83,18 +83,6 @@ public class Vadi.Container : Object {
 		return construct_props_array.steal ();
 	}
 
-	private void initialize_props (ParamSpec[] props, out string[] names, out Value[] values) {
-		var names_array = new GenericArray<string> ();
-		var values_array = new Array<Value> ();
-
-		foreach (ParamSpec pspec in props) {
-			Object prop_value = this.resolve (pspec.value_type);
-			if (prop_value != null) {
-				names_array.add (pspec.name);
-			}
-		}
-	}
-
 	private (unowned string)[] get_matched_property_names (ParamSpec[] props) {
 		var names = new (unowned string)[0];
 
