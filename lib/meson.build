@@ -1,6 +1,6 @@
 sources = files (
-	'vadi-factory-func-closure.vala',
-	'vadi-container.vala'
+	'container.vala',
+	'factory-func-closure.vala',
 )
 
 vadi_version = meson.project_version ()
