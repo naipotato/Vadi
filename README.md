@@ -20,7 +20,7 @@ Vadi requires the following dependencies:
 Once installed, run the following commands:
 
 ```sh
-meson build --buildtype release --prefix /usr
+meson build --buildtype release --prefix /usr -Dtests=false
 sudo ninja -C build install
 ```
 
@@ -31,7 +31,6 @@ properties:
 
 ```vala
 public class Client : Object {
-
 	public Service service { get; construct; }
 }
 ```
