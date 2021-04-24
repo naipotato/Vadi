@@ -1,11 +1,9 @@
-test_container_sources = files (
-	'test-container.vala'
+test_container_sources = [
+	'test-container.vala',
+]
+
+test_container = executable('test-container', test_container_sources,
+	dependencies: vadi_dep,
 )
 
-test_container = executable (
-	'test-container',
-	test_container_sources,
-	dependencies: vadi_dep
-)
-
-test ('test-container', test_container)
+test('test-container', test_container)

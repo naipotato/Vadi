@@ -1,35 +1,32 @@
-sources = files (
+sources = [
 	'container.vala',
 	'factory-func-closure.vala',
-)
-
-vadi_version = meson.project_version ()
-version_array = vadi_version.split ('.')
-vadi_major_version = version_array[0].to_int ()
-vadi_minor_version = version_array[1].to_int ()
-vadi_micro_version = version_array[2].to_int ()
-
-vadi_api_version = '@0@.0'.format (vadi_major_version)
-vadi_api_name = '@0@-@1@'.format (meson.project_name (), vadi_api_version)
-vadi_gi_name = 'Vadi-@0@'.format (vadi_api_version)
-
-vadi_header = '@0@.h'.format (meson.project_name ())
-vadi_vapi = '@0@.vapi'.format (vadi_api_name)
-vadi_gir = '@0@.gir'.format (vadi_gi_name)
-vadi_typelib = '@0@.typelib'.format (vadi_gi_name)
-vadi_pc = '@0@.pc'.format (vadi_api_name)
-vadi_deps = '@0@.deps'.format (vadi_api_name)
-
-deps = [
-	dependency ('glib-2.0', version: '>=2.54'),
-	dependency ('gobject-2.0', version: '>=2.54'),
-	dependency ('gee-0.8')
 ]
 
-vadi = library (
-	meson.project_name (),
-	sources,
+vadi_version       = meson.project_version()
+version_array      = vadi_version.split('.')
+vadi_major_version = version_array[0]
+vadi_minor_version = version_array[1]
+vadi_micro_version = version_array[2]
 
+vadi_api_version = vadi_major_version + '.0'
+vadi_api_name    = meson.project_name() + '-' + vadi_api_version
+vadi_gi_name     = 'Vadi-' + vadi_api_version
+
+vadi_header  = meson.project_name() + '.h'
+vadi_vapi    = vadi_api_name + '.vapi'
+vadi_pc      = vadi_api_name + '.pc'
+vadi_deps    = vadi_api_name + '.deps'
+vadi_gir     = vadi_gi_name + '.gir'
+vadi_typelib = vadi_gi_name + '.typelib'
+
+deps = [
+	dependency('glib-2.0', version: '>=2.54'),
+	dependency('gobject-2.0', version: '>=2.54'),
+	dependency('gee-0.8')
+]
+
+vadi = library(meson.project_name(), sources,
      vala_header: vadi_header,
        vala_vapi: vadi_vapi,
         vala_gir: vadi_gir,
@@ -38,34 +35,32 @@ vadi = library (
      install_dir: [true, true, true, true]
 )
 
-g_ir_compiler = find_program ('g-ir-compiler')
+g_ir_compiler = find_program('g-ir-compiler')
 
-custom_target (
-    vadi_typelib,
-    command: [
-        g_ir_compiler,
-        '--shared-library',
-        vadi.full_path (),
-        '--output',
-        '@OUTPUT@',
-        meson.current_build_dir () / vadi_gir
-    ],
-
-         output: vadi_typelib,
-        depends: vadi,
-        install: true,
-    install_dir: get_option ('libdir') / 'girepository-1.0'
+custom_target(vadi_typelib,
+	command: [
+		g_ir_compiler,
+		'--shared-library',
+		vadi.full_path(),
+		'--output',
+		'@OUTPUT@',
+		meson.current_build_dir() / vadi_gir
+  ],
+	     output: vadi_typelib,
+	    depends: vadi,
+	    install: true,
+	install_dir: get_option('libdir') / 'girepository-1.0'
 )
 
-vadi_dep = declare_dependency (
+vadi_dep = declare_dependency(
 	          link_with: vadi,
 	       dependencies: deps,
-	include_directories: [include_directories ('.')]
+	include_directories: [include_directories('.')]
 )
 
-pkg = import ('pkgconfig')
+pkg = import('pkgconfig')
 
-pkg.generate (vadi,
+pkg.generate(vadi,
 	description: 'IoC Container for Vala',
 	   filebase: vadi_api_name,
 	        url: 'https://github.com/nahuelwexd/Vadi'
@@ -74,16 +69,16 @@ pkg.generate (vadi,
 requires = []
 
 foreach dep : deps
-	requires += dep.name ()
+	requires += dep.name()
 endforeach
 
-deps_conf = configuration_data ()
-deps_conf.set ('deps', '\n'.join (requires))
+deps_conf = configuration_data()
+deps_conf.set('deps', '\n'.join(requires))
 
-configure_file (
+configure_file(
 	        input: 'deps.meson',
 	       output: vadi_deps,
 	configuration: deps_conf,
 	      install: true,
-	  install_dir: get_option ('datadir') / 'vala/vapi'
+	  install_dir: get_option('datadir') / 'vala/vapi'
 )
