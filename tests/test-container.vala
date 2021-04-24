@@ -36,7 +36,7 @@ int main (string[] args) {
 	Test.add_func ("/vadi/container/resolve/interface", () => {
 		var container = new Vadi.Container ();
 
-		Service? service = container.resolve<Service> ();
+		Object service = container.resolve (typeof (Service));
 
 		assert_null (service);
 	});
@@ -44,7 +44,7 @@ int main (string[] args) {
 	Test.add_func ("/vadi/container/register/none", () => {
 		var container = new Vadi.Container ();
 
-		FoodService? service = container.resolve<FoodService> ();
+		Object service = container.resolve (typeof (FoodService));
 
 		assert_nonnull (service);
 	});
@@ -52,9 +52,9 @@ int main (string[] args) {
 	Test.add_func ("/vadi/container/register/type/simple", () => {
 		var container = new Vadi.Container ();
 
-		container.register_type<Service, FoodService> ();
+		container.register_type (typeof (Service), typeof (FoodService));
 
-		Service? service = container.resolve<Service> ();
+		Object service = container.resolve (typeof (Service));
 
 		assert_nonnull (service);
 		assert_true (service is FoodService);
@@ -63,10 +63,10 @@ int main (string[] args) {
 	Test.add_func ("/vadi/container/register/type/simple-repeat", () => {
 		var container = new Vadi.Container ();
 
-		container.register_type<Service, FoodService> ();
+		container.register_type (typeof (Service), typeof (FoodService));
 
-		Service? service_a = container.resolve<Service> ();
-		Service? service_b = container.resolve<Service> ();
+		Object service_a = container.resolve (typeof (Service));
+		Object service_b = container.resolve (typeof (Service));
 
 		assert_nonnull (service_a);
 		assert_nonnull (service_b);
@@ -79,9 +79,9 @@ int main (string[] args) {
 	Test.add_func ("/vadi/container/register/type/recursive", () => {
 		var container = new Vadi.Container ();
 
-		container.register_type<Service, FoodService> ();
+		container.register_type (typeof (Service), typeof (FoodService));
 
-		Client? client = container.resolve<Client> ();
+		var client = (Client) container.resolve (typeof (Client));
 
 		assert_nonnull (client);
 		assert_nonnull (client.service);
@@ -91,10 +91,10 @@ int main (string[] args) {
 	Test.add_func ("/vadi/container/register/type/register-myself", () => {
 		var container = new Vadi.Container ();
 
-		container.register_type<Service, FoodService> ();
-		container.register_type<Client, Client> ();
+		container.register_type (typeof (Service), typeof (FoodService));
+		container.register_type (typeof (Client), typeof (Client));
 
-		Client? client = container.resolve<Client> ();
+		var client = (Client) container.resolve (typeof (Client));
 
 		assert_nonnull (client);
 		assert_nonnull (client.service);
@@ -104,11 +104,11 @@ int main (string[] args) {
 	Test.add_func ("/vadi/container/register/factory/simple", () => {
 		var container = new Vadi.Container ();
 
-		container.register_factory<Service> (container => {
+		container.register_factory (typeof (Service), container => {
 			return new FoodService ();
 		});
 
-		Service? service = container.resolve<Service> ();
+		Object service = container.resolve (typeof (Service));
 
 		assert_nonnull (service);
 		assert_true (service is FoodService);
@@ -117,14 +117,14 @@ int main (string[] args) {
 	Test.add_func ("/vadi/container/register/factory/recursive", () => {
 		var container = new Vadi.Container ();
 
-		container.register_factory<Service> (container => {
+		container.register_factory (typeof (Service), container => {
 			return new FoodService ();
 		});
-		container.register_factory<Client> (container => {
-			return new Client (container.resolve<Service> ());
+		container.register_factory (typeof (Client), container => {
+			return new Client ((Service) container.resolve (typeof (Service)));
 		});
 
-		Client? client = container.resolve<Client> ();
+		var client = (Client) container.resolve (typeof (Client));
 
 		assert_nonnull (client);
 		assert_nonnull (client.service);
@@ -135,11 +135,11 @@ int main (string[] args) {
 		var container = new Vadi.Container ();
 		var food_service = new FoodService ();
 
-		container.register_factory<Client> (container => {
+		container.register_factory (typeof (Client), container => {
 			return new Client (food_service);
 		});
 
-		Client? client = container.resolve<Client> ();
+		var client = (Client) container.resolve (typeof (Client));
 
 		assert_nonnull (client);
 		assert_nonnull (client.service);
@@ -150,9 +150,9 @@ int main (string[] args) {
 		var container = new Vadi.Container ();
 		var food_service = new FoodService ();
 
-		container.register_instance<Service> (food_service);
+		container.register_instance (typeof (Service), food_service);
 
-		Service? service = container.resolve<Service> ();
+		Object service = container.resolve (typeof (Service));
 
 		assert_nonnull (service);
 		assert_true (service == food_service);
@@ -161,12 +161,12 @@ int main (string[] args) {
 	Test.add_func ("/vadi/container/register/mixed/type-factory", () => {
 		var container = new Vadi.Container ();
 
-		container.register_type<Service, FoodService> ();
-		container.register_factory<Client> (container => {
-			return new Client (container.resolve<Service> ());
+		container.register_type (typeof (Service), typeof (FoodService));
+		container.register_factory (typeof (Client), container => {
+			return new Client ((Service) container.resolve (typeof (Service)));
 		});
 
-		Client? client = container.resolve<Client> ();
+		var client = (Client) container.resolve (typeof (Client));
 
 		assert_nonnull (client);
 		assert_nonnull (client.service);
@@ -176,11 +176,11 @@ int main (string[] args) {
 	Test.add_func ("/vadi/container/register/mixed/factory-type", () => {
 		var container = new Vadi.Container ();
 
-		container.register_factory<Service> (container => {
+		container.register_factory (typeof (Service), container => {
 			return new FoodService ();
 		});
 
-		Client? client = container.resolve<Client> ();
+		var client = (Client) container.resolve (typeof (Client));
 
 		assert_nonnull (client);
 		assert_nonnull (client.service);
@@ -191,9 +191,9 @@ int main (string[] args) {
 		var container = new Vadi.Container ();
 		var food_service = new FoodService ();
 
-		container.register_instance<Service> (food_service);
+		container.register_instance (typeof (Service), food_service);
 
-		Client? client = container.resolve<Client> ();
+		var client = (Client) container.resolve (typeof (Client));
 
 		assert_nonnull (client);
 		assert_nonnull (client.service);
@@ -204,12 +204,12 @@ int main (string[] args) {
 		var container = new Vadi.Container ();
 		var food_service = new FoodService ();
 
-		container.register_instance<Service> (food_service);
-		container.register_factory<Client> (container => {
-			return new Client (container.resolve<Service> ());
+		container.register_instance (typeof (Service), food_service);
+		container.register_factory (typeof (Client), container => {
+			return new Client ((Service) container.resolve (typeof (Service)));
 		});
 
-		Client? client = container.resolve<Client> ();
+		var client = (Client) container.resolve (typeof (Client));
 
 		assert_nonnull (client);
 		assert_nonnull (client.service);

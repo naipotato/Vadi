@@ -16,15 +16,14 @@
  * along with Vadi. If not, see <https://www.gnu.org/licenses/>.
  */
 
-public delegate T Vadi.FactoryFunc<T> (Vadi.Container container);
+public delegate Object Vadi.FactoryFunc (Vadi.Container container);
 
 // This is highly inspired on libgee's internal reimplementation of GClosure
 // https://gitlab.gnome.org/GNOME/libgee/-/blob/master/gee/functions.vala
-[CCode (simple_generics = true)]
-private class Vadi.FactoryFuncClosure<T> : Object {
-	public FactoryFunc<T> func;
+private class Vadi.FactoryFuncClosure : Object {
+	public FactoryFunc func;
 
-	public FactoryFuncClosure(owned FactoryFunc<T> func) {
+	public FactoryFuncClosure(owned FactoryFunc func) {
 		this.func = (owned) func;
 	}
 }

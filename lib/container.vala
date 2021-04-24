@@ -21,29 +21,52 @@ public class Vadi.Container : Object {
 	private Gee.Map<Type, FactoryFuncClosure> _factories;
 	private Gee.Map<Type, Object>             _instances;
 
-	public void register_type<K, V> ()
-		requires (typeof (K).is_interface () || typeof (K).is_object ())
-		requires (typeof (V).is_object ())
-		requires (typeof (V).is_a (typeof (K)))
+	public void register_type (Type key_type, Type value_type)
+		requires (key_type.is_interface () || key_type.is_object ())
+		requires (value_type.is_object ())
+		requires (value_type.is_a (key_type))
 	{
-		this._types[typeof (K)] = typeof (V);
+		this._types[key_type] = value_type;
 	}
 
-	public void register_factory<K> (owned FactoryFunc<K> container_factory)
-		requires (typeof (K).is_interface () || typeof (K).is_object ())
+	public void register_factory (Type key_type, owned FactoryFunc container_factory)
+		requires (key_type.is_interface () || key_type.is_object ())
 	{
-		this._factories[typeof (K)] = new FactoryFuncClosure<K> ((owned) container_factory);
+		this._factories[key_type] = new FactoryFuncClosure ((owned) container_factory);
 	}
 
-	public void register_instance<K> (K instance)
-		requires (typeof (K).is_interface () || typeof (K).is_object ())
-		requires (instance is K)
+	public void register_instance (Type key_type, Object instance)
+		requires (key_type.is_interface () || key_type.is_object ())
+		requires (instance.get_type ().is_a (key_type))
 	{
-		this._instances[typeof (K)] = (Object) instance;
+		this._instances[key_type] = instance;
 	}
 
-	public T? resolve<T> () requires (typeof (T).is_interface () || typeof (T).is_object ()) {
-		return this.resolve_type (typeof (T));
+	public Object? resolve (Type type) requires (type.is_interface () || type.is_object ()) {
+		if (this._instances.has_key (type)) {
+			return this._instances[type];
+		}
+
+		if (this._factories.has_key (type)) {
+			this._instances[type] = (Object) this._factories[type].func (this);
+
+			return this._instances[type];
+		}
+
+		Type resolve_type = this._types.has_key (type) ? this._types[type] : type;
+
+		if (resolve_type.is_object ()) {
+			(unowned ParamSpec)[] props = this.get_construct_properties (resolve_type);
+
+			(unowned string)[] names = this.get_matched_property_names (props);
+			Value[] values           = this.get_matched_property_values (props);
+
+			this._instances[type] = Object.new_with_properties (resolve_type, names, values);
+
+			return this._instances[type];
+		}
+
+		return null;
 	}
 
 	private (unowned ParamSpec)[] get_construct_properties (Type type) {
@@ -100,7 +123,7 @@ public class Vadi.Container : Object {
 					values.resize (values.length + 1);
 
 					var @value = Value (key_type);
-					@value.set_object (this.resolve_type (key_type));
+					@value.set_object (this.resolve (key_type));
 
 					values[values.length - 1] = @value;
 				}
@@ -111,7 +134,7 @@ public class Vadi.Container : Object {
 					values.resize (values.length + 1);
 
 					var @value = Value (key_type);
-					@value.set_object (this.resolve_type (key_type));
+					@value.set_object (this.resolve (key_type));
 
 					values[values.length - 1] = @value;
 				}
@@ -122,7 +145,7 @@ public class Vadi.Container : Object {
 					values.resize (values.length + 1);
 
 					var @value = Value (key_type);
-					@value.set_object (this.resolve_type (key_type));
+					@value.set_object (this.resolve (key_type));
 
 					values[values.length - 1] = @value;
 				}
@@ -130,33 +153,6 @@ public class Vadi.Container : Object {
 		}
 
 		return values;
-	}
-
-	private Object? resolve_type (Type type) {
-		if (this._instances.has_key (type)) {
-			return this._instances[type];
-		}
-
-		if (this._factories.has_key (type)) {
-			this._instances[type] = (Object) this._factories[type].func (this);
-
-			return this._instances[type];
-		}
-
-		Type resolve_type = this._types.has_key (type) ? this._types[type] : type;
-
-		if (resolve_type.is_object ()) {
-			(unowned ParamSpec)[] props = this.get_construct_properties (resolve_type);
-
-			(unowned string)[] names = this.get_matched_property_names (props);
-			Value[] values           = this.get_matched_property_values (props);
-
-			this._instances[type] = Object.new_with_properties (resolve_type, names, values);
-
-			return this._instances[type];
-		}
-
-		return null;
 	}
 
 	construct {
