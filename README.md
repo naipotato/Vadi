@@ -11,8 +11,8 @@ facilities.
 
 Vadi requires the following dependencies:
 
-- `glib-2.0` (>= 2.54)
-- `gobject-2.0` (>= 2.54)
+- `glib-2.0` (>= 2.64)
+- `gobject-2.0` (>= 2.64)
 - `gee-0.8`
 - `meson`
 - `vala`
@@ -20,7 +20,7 @@ Vadi requires the following dependencies:
 Once installed, run the following commands:
 
 ```sh
-meson build --buildtype release --prefix /usr
+meson build --buildtype release --prefix /usr -Dtests=false
 sudo ninja -C build install
 ```
 
@@ -31,7 +31,6 @@ properties:
 
 ```vala
 public class Client : Object {
-
 	public Service service { get; construct; }
 }
 ```
