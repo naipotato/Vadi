@@ -66,19 +66,7 @@ pkg.generate(vadi,
 	        url: 'https://github.com/nahuelwexd/Vadi'
 )
 
-requires = []
-
-foreach dep : deps
-	requires += dep.name()
-endforeach
-
-deps_conf = configuration_data()
-deps_conf.set('deps', '\n'.join(requires))
-
-configure_file(
-	        input: 'deps.meson',
-	       output: vadi_deps,
-	configuration: deps_conf,
-	      install: true,
-	  install_dir: get_option('datadir') / 'vala/vapi'
+install_data('deps.meson',
+	install_dir: get_option('datadir') / 'vala/vapi',
+	     rename: vadi_deps,
 )
