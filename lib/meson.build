@@ -21,8 +21,8 @@ vadi_gir     = vadi_gi_name + '.gir'
 vadi_typelib = vadi_gi_name + '.typelib'
 
 deps = [
-	dependency('glib-2.0', version: '>=2.54'),
-	dependency('gobject-2.0', version: '>=2.54'),
+	dependency('glib-2.0', version: '>=2.64'),
+	dependency('gobject-2.0', version: '>=2.64'),
 	dependency('gee-0.8')
 ]
 
