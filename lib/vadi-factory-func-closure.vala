@@ -20,7 +20,7 @@ public delegate T Vadi.FactoryFunc<T> (Vadi.Container container);
 // This is highly inspired on libgee's internal reimplementation of GClosure
 // https://gitlab.gnome.org/GNOME/libgee/-/blob/master/gee/functions.vala
 [CCode (simple_generics = true)]
-private class Vadi.FactoryFuncClosure<T> : GLib.Object {
+private class Vadi.FactoryFuncClosure<T> : Object {
 	public FactoryFunc<T> func;
 
 	public FactoryFuncClosure(owned FactoryFunc<T> func) {

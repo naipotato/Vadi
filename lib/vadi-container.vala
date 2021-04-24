@@ -15,10 +15,10 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-public class Vadi.Container : GLib.Object {
-	private Gee.Map<GLib.Type, GLib.Type>                   _types;
-	private Gee.Map<GLib.Type, FactoryFuncClosure> _factories;
-	private Gee.Map<GLib.Type, GLib.Object>                 _instances;
+public class Vadi.Container : Object {
+	private Gee.Map<Type, Type>               _types;
+	private Gee.Map<Type, FactoryFuncClosure> _factories;
+	private Gee.Map<Type, Object>             _instances;
 
 	public void register_type<K, V> ()
 		requires (typeof (K).is_interface () || typeof (K).is_object ())
@@ -38,21 +38,21 @@ public class Vadi.Container : GLib.Object {
 		requires (typeof (K).is_interface () || typeof (K).is_object ())
 		requires (instance is K)
 	{
-		this._instances[typeof (K)] = (GLib.Object) instance;
+		this._instances[typeof (K)] = (Object) instance;
 	}
 
 	public T? resolve<T> () requires (typeof (T).is_interface () || typeof (T).is_object ()) {
 		return this.resolve_type (typeof (T));
 	}
 
-	private (unowned GLib.ParamSpec)[] get_construct_properties (GLib.Type type) {
-		var klass = (GLib.ObjectClass) type.class_ref ();
-		(unowned GLib.ParamSpec)[] props = klass.list_properties ();
+	private (unowned ParamSpec)[] get_construct_properties (Type type) {
+		var klass = (ObjectClass) type.class_ref ();
+		(unowned ParamSpec)[] props = klass.list_properties ();
 
-		var result = new (unowned GLib.ParamSpec)[0];
+		var result = new (unowned ParamSpec)[0];
 
 		for (var i = 0; i < props.length; i++) {
-			if ((props[i].flags & GLib.ParamFlags.CONSTRUCT) != 0 || (props[i].flags & GLib.ParamFlags.CONSTRUCT_ONLY) != 0) {
+			if ((props[i].flags & ParamFlags.CONSTRUCT) != 0 || (props[i].flags & ParamFlags.CONSTRUCT_ONLY) != 0) {
 				result.resize (result.length + 1);
 				result[result.length - 1] = props[i];
 			}
@@ -61,25 +61,25 @@ public class Vadi.Container : GLib.Object {
 		return result;
 	}
 
-	private (unowned string)[] get_matched_property_names ((unowned GLib.ParamSpec)[] props) {
+	private (unowned string)[] get_matched_property_names ((unowned ParamSpec)[] props) {
 		var names = new (unowned string)[0];
 
 		for (var i = 0; i < props.length; i++) {
-			foreach (GLib.Type key_type in this._instances.keys) {
+			foreach (Type key_type in this._instances.keys) {
 				if (props[i].value_type == key_type) {
 					names.resize (names.length + 1);
 					names[names.length - 1] = props[i].name;
 				}
 			}
 
-			foreach (GLib.Type key_type in this._factories.keys) {
+			foreach (Type key_type in this._factories.keys) {
 				if (props[i].value_type == key_type) {
 					names.resize (names.length + 1);
 					names[names.length - 1] = props[i].name;
 				}
 			}
 
-			foreach (GLib.Type key_type in this._types.keys) {
+			foreach (Type key_type in this._types.keys) {
 				if (props[i].value_type == key_type) {
 					names.resize (names.length + 1);
 					names[names.length - 1] = props[i].name;
@@ -90,37 +90,37 @@ public class Vadi.Container : GLib.Object {
 		return names;
 	}
 
-	private GLib.Value[] get_matched_property_values ((unowned GLib.ParamSpec)[] props) {
-		var values = new GLib.Value[0];
+	private Value[] get_matched_property_values ((unowned ParamSpec)[] props) {
+		var values = new Value[0];
 
 		for (var i = 0; i < props.length; i++) {
-			foreach (GLib.Type key_type in this._instances.keys) {
+			foreach (Type key_type in this._instances.keys) {
 				if (props[i].value_type == key_type) {
 					values.resize (values.length + 1);
 
-					var @value = GLib.Value (key_type);
+					var @value = Value (key_type);
 					@value.set_object (this.resolve_type (key_type));
 
 					values[values.length - 1] = @value;
 				}
 			}
 
-			foreach (GLib.Type key_type in this._factories.keys) {
+			foreach (Type key_type in this._factories.keys) {
 				if (props[i].value_type == key_type) {
 					values.resize (values.length + 1);
 
-					var @value = GLib.Value (key_type);
+					var @value = Value (key_type);
 					@value.set_object (this.resolve_type (key_type));
 
 					values[values.length - 1] = @value;
 				}
 			}
 
-			foreach (GLib.Type key_type in this._types.keys) {
+			foreach (Type key_type in this._types.keys) {
 				if (props[i].value_type == key_type) {
 					values.resize (values.length + 1);
 
-					var @value = GLib.Value (key_type);
+					var @value = Value (key_type);
 					@value.set_object (this.resolve_type (key_type));
 
 					values[values.length - 1] = @value;
@@ -131,26 +131,26 @@ public class Vadi.Container : GLib.Object {
 		return values;
 	}
 
-	private GLib.Object? resolve_type (GLib.Type type) {
+	private Object? resolve_type (Type type) {
 		if (this._instances.has_key (type)) {
 			return this._instances[type];
 		}
 
 		if (this._factories.has_key (type)) {
-			this._instances[type] = (GLib.Object) this._factories[type].func (this);
+			this._instances[type] = (Object) this._factories[type].func (this);
 
 			return this._instances[type];
 		}
 
-		GLib.Type resolve_type = this._types.has_key (type) ? this._types[type] : type;
+		Type resolve_type = this._types.has_key (type) ? this._types[type] : type;
 
 		if (resolve_type.is_object ()) {
-			(unowned GLib.ParamSpec)[] props = this.get_construct_properties (resolve_type);
+			(unowned ParamSpec)[] props = this.get_construct_properties (resolve_type);
 
 			(unowned string)[] names = this.get_matched_property_names (props);
-			GLib.Value[] values      = this.get_matched_property_values (props);
+			Value[] values           = this.get_matched_property_values (props);
 
-			this._instances[type] = GLib.Object.new_with_properties (resolve_type, names, values);
+			this._instances[type] = Object.new_with_properties (resolve_type, names, values);
 
 			return this._instances[type];
 		}
@@ -159,8 +159,8 @@ public class Vadi.Container : GLib.Object {
 	}
 
 	construct {
-		this._types     = new Gee.HashMap<GLib.Type, GLib.Type> ();
-		this._factories = new Gee.HashMap<GLib.Type, FactoryFuncClosure> ();
-		this._instances = new Gee.HashMap<GLib.Type, GLib.Object> ();
+		this._types     = new Gee.HashMap<Type, Type> ();
+		this._factories = new Gee.HashMap<Type, FactoryFuncClosure> ();
+		this._instances = new Gee.HashMap<Type, Object> ();
 	}
 }
