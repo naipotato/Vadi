@@ -56,7 +56,7 @@ public class Vadi.Container : Object {
 		Type resolve_type = this._types.has_key (type) ? this._types[type] : type;
 
 		if (resolve_type.is_object ()) {
-			(unowned ParamSpec)[] props = this.get_construct_properties (resolve_type);
+			ParamSpec[] props = this.get_construct_props_from_type (resolve_type);
 
 			(unowned string)[] names = this.get_matched_property_names (props);
 			Value[] values           = this.get_matched_property_values (props);
@@ -69,23 +69,21 @@ public class Vadi.Container : Object {
 		return null;
 	}
 
-	private (unowned ParamSpec)[] get_construct_properties (Type type) {
-		var klass = (ObjectClass) type.class_ref ();
-		(unowned ParamSpec)[] props = klass.list_properties ();
+	private ParamSpec[] get_construct_props_from_type (Type type) {
+		var object_class = (ObjectClass) type.class_ref ();
+		ParamSpec[] props = object_class.list_properties ();
 
-		var result = new (unowned ParamSpec)[0];
+		var construct_props_array = new GenericArray<ParamSpec> ();
 
-		for (var i = 0; i < props.length; i++) {
-			if ((props[i].flags & ParamFlags.CONSTRUCT) != 0 || (props[i].flags & ParamFlags.CONSTRUCT_ONLY) != 0) {
-				result.resize (result.length + 1);
-				result[result.length - 1] = props[i];
-			}
+		foreach (ParamSpec pspec in props) {
+			if ((pspec.flags & ParamFlags.CONSTRUCT) != 0 || (pspec.flags & ParamFlags.CONSTRUCT_ONLY) != 0)
+				construct_props_array.add (pspec);
 		}
 
-		return result;
+		return construct_props_array.steal ();
 	}
 
-	private (unowned string)[] get_matched_property_names ((unowned ParamSpec)[] props) {
+	private (unowned string)[] get_matched_property_names (ParamSpec[] props) {
 		var names = new (unowned string)[0];
 
 		for (var i = 0; i < props.length; i++) {
@@ -114,7 +112,7 @@ public class Vadi.Container : Object {
 		return names;
 	}
 
-	private Value[] get_matched_property_values ((unowned ParamSpec)[] props) {
+	private Value[] get_matched_property_values (ParamSpec[] props) {
 		var values = new Value[0];
 
 		for (var i = 0; i < props.length; i++) {
