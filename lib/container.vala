@@ -16,7 +16,7 @@
  * along with Vadi. If not, see <https://www.gnu.org/licenses/>.
  */
 
-public class Vadi.Container : Object {
+public class Vdi.Container : Object {
 	private HashTable<Type, Type>               _types;
 	private HashTable<Type, FactoryFuncClosure> _factories;
 	private HashTable<Type, Object>             _instances;

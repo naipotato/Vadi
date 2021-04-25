@@ -34,7 +34,7 @@ int main (string[] args) {
 	Test.init (ref args);
 
 	Test.add_func ("/vadi/container/resolve/interface", () => {
-		var container = new Vadi.Container ();
+		var container = new Vdi.Container ();
 
 		Object service = container.@get (typeof (Service));
 
@@ -42,7 +42,7 @@ int main (string[] args) {
 	});
 
 	Test.add_func ("/vadi/container/register/none", () => {
-		var container = new Vadi.Container ();
+		var container = new Vdi.Container ();
 
 		Object service = container.@get (typeof (FoodService));
 
@@ -50,7 +50,7 @@ int main (string[] args) {
 	});
 
 	Test.add_func ("/vadi/container/register/type/simple", () => {
-		var container = new Vadi.Container ();
+		var container = new Vdi.Container ();
 
 		container.bind_type (typeof (Service), typeof (FoodService));
 
@@ -61,7 +61,7 @@ int main (string[] args) {
 	});
 
 	Test.add_func ("/vadi/container/register/type/simple-repeat", () => {
-		var container = new Vadi.Container ();
+		var container = new Vdi.Container ();
 
 		container.bind_type (typeof (Service), typeof (FoodService));
 
@@ -77,7 +77,7 @@ int main (string[] args) {
 	});
 
 	Test.add_func ("/vadi/container/register/type/recursive", () => {
-		var container = new Vadi.Container ();
+		var container = new Vdi.Container ();
 
 		container.bind_type (typeof (Service), typeof (FoodService));
 
@@ -89,7 +89,7 @@ int main (string[] args) {
 	});
 
 	Test.add_func ("/vadi/container/register/type/register-myself", () => {
-		var container = new Vadi.Container ();
+		var container = new Vdi.Container ();
 
 		container.bind_type (typeof (Service), typeof (FoodService));
 		container.bind_type (typeof (Client), typeof (Client));
@@ -102,7 +102,7 @@ int main (string[] args) {
 	});
 
 	Test.add_func ("/vadi/container/register/factory/simple", () => {
-		var container = new Vadi.Container ();
+		var container = new Vdi.Container ();
 
 		container.bind_factory (typeof (Service), container => {
 			return new FoodService ();
@@ -115,7 +115,7 @@ int main (string[] args) {
 	});
 
 	Test.add_func ("/vadi/container/register/factory/recursive", () => {
-		var container = new Vadi.Container ();
+		var container = new Vdi.Container ();
 
 		container.bind_factory (typeof (Service), container => {
 			return new FoodService ();
@@ -132,7 +132,7 @@ int main (string[] args) {
 	});
 
 	Test.add_func ("/vadi/container/register/factory/use-local-variables", () => {
-		var container = new Vadi.Container ();
+		var container = new Vdi.Container ();
 		var food_service = new FoodService ();
 
 		container.bind_factory (typeof (Client), container => {
@@ -147,7 +147,7 @@ int main (string[] args) {
 	});
 
 	Test.add_func ("/vadi/container/register/instance/simple", () => {
-		var container = new Vadi.Container ();
+		var container = new Vdi.Container ();
 		var food_service = new FoodService ();
 
 		container.bind_instance (typeof (Service), food_service);
@@ -159,7 +159,7 @@ int main (string[] args) {
 	});
 
 	Test.add_func ("/vadi/container/register/mixed/type-factory", () => {
-		var container = new Vadi.Container ();
+		var container = new Vdi.Container ();
 
 		container.bind_type (typeof (Service), typeof (FoodService));
 		container.bind_factory (typeof (Client), container => {
@@ -174,7 +174,7 @@ int main (string[] args) {
 	});
 
 	Test.add_func ("/vadi/container/register/mixed/factory-type", () => {
-		var container = new Vadi.Container ();
+		var container = new Vdi.Container ();
 
 		container.bind_factory (typeof (Service), container => {
 			return new FoodService ();
@@ -188,7 +188,7 @@ int main (string[] args) {
 	});
 
 	Test.add_func ("/vadi/container/register/mixed/instance-type", () => {
-		var container = new Vadi.Container ();
+		var container = new Vdi.Container ();
 		var food_service = new FoodService ();
 
 		container.bind_instance (typeof (Service), food_service);
@@ -201,7 +201,7 @@ int main (string[] args) {
 	});
 
 	Test.add_func ("/vadi/container/register/mixed/instance-factory", () => {
-		var container = new Vadi.Container ();
+		var container = new Vdi.Container ();
 		var food_service = new FoodService ();
 
 		container.bind_instance (typeof (Service), food_service);
