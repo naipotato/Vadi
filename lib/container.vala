@@ -21,7 +21,7 @@ public class Vadi.Container : Object {
 	private Gee.Map<Type, FactoryFuncClosure> _factories;
 	private Gee.Map<Type, Object>             _instances;
 
-	public void register_type (Type key_type, Type value_type)
+	public void bind_type (Type key_type, Type value_type)
 		requires (key_type.is_interface () || key_type.is_object ())
 		requires (value_type.is_object ())
 		requires (value_type.is_a (key_type))
@@ -29,13 +29,13 @@ public class Vadi.Container : Object {
 		this._types[key_type] = value_type;
 	}
 
-	public void register_factory (Type key_type, owned FactoryFunc container_factory)
+	public void bind_factory (Type key_type, owned FactoryFunc container_factory)
 		requires (key_type.is_interface () || key_type.is_object ())
 	{
 		this._factories[key_type] = new FactoryFuncClosure ((owned) container_factory);
 	}
 
-	public void register_instance (Type key_type, Object instance)
+	public void bind_instance (Type key_type, Object instance)
 		requires (key_type.is_interface () || key_type.is_object ())
 		requires (instance.get_type ().is_a (key_type))
 	{

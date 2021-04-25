@@ -52,7 +52,7 @@ int main (string[] args) {
 	Test.add_func ("/vadi/container/register/type/simple", () => {
 		var container = new Vadi.Container ();
 
-		container.register_type (typeof (Service), typeof (FoodService));
+		container.bind_type (typeof (Service), typeof (FoodService));
 
 		Object service = container.resolve (typeof (Service));
 
@@ -63,7 +63,7 @@ int main (string[] args) {
 	Test.add_func ("/vadi/container/register/type/simple-repeat", () => {
 		var container = new Vadi.Container ();
 
-		container.register_type (typeof (Service), typeof (FoodService));
+		container.bind_type (typeof (Service), typeof (FoodService));
 
 		Object service_a = container.resolve (typeof (Service));
 		Object service_b = container.resolve (typeof (Service));
@@ -79,7 +79,7 @@ int main (string[] args) {
 	Test.add_func ("/vadi/container/register/type/recursive", () => {
 		var container = new Vadi.Container ();
 
-		container.register_type (typeof (Service), typeof (FoodService));
+		container.bind_type (typeof (Service), typeof (FoodService));
 
 		var client = (Client) container.resolve (typeof (Client));
 
@@ -91,8 +91,8 @@ int main (string[] args) {
 	Test.add_func ("/vadi/container/register/type/register-myself", () => {
 		var container = new Vadi.Container ();
 
-		container.register_type (typeof (Service), typeof (FoodService));
-		container.register_type (typeof (Client), typeof (Client));
+		container.bind_type (typeof (Service), typeof (FoodService));
+		container.bind_type (typeof (Client), typeof (Client));
 
 		var client = (Client) container.resolve (typeof (Client));
 
@@ -104,7 +104,7 @@ int main (string[] args) {
 	Test.add_func ("/vadi/container/register/factory/simple", () => {
 		var container = new Vadi.Container ();
 
-		container.register_factory (typeof (Service), container => {
+		container.bind_factory (typeof (Service), container => {
 			return new FoodService ();
 		});
 
@@ -117,10 +117,10 @@ int main (string[] args) {
 	Test.add_func ("/vadi/container/register/factory/recursive", () => {
 		var container = new Vadi.Container ();
 
-		container.register_factory (typeof (Service), container => {
+		container.bind_factory (typeof (Service), container => {
 			return new FoodService ();
 		});
-		container.register_factory (typeof (Client), container => {
+		container.bind_factory (typeof (Client), container => {
 			return new Client ((Service) container.resolve (typeof (Service)));
 		});
 
@@ -135,7 +135,7 @@ int main (string[] args) {
 		var container = new Vadi.Container ();
 		var food_service = new FoodService ();
 
-		container.register_factory (typeof (Client), container => {
+		container.bind_factory (typeof (Client), container => {
 			return new Client (food_service);
 		});
 
@@ -150,7 +150,7 @@ int main (string[] args) {
 		var container = new Vadi.Container ();
 		var food_service = new FoodService ();
 
-		container.register_instance (typeof (Service), food_service);
+		container.bind_instance (typeof (Service), food_service);
 
 		Object service = container.resolve (typeof (Service));
 
@@ -161,8 +161,8 @@ int main (string[] args) {
 	Test.add_func ("/vadi/container/register/mixed/type-factory", () => {
 		var container = new Vadi.Container ();
 
-		container.register_type (typeof (Service), typeof (FoodService));
-		container.register_factory (typeof (Client), container => {
+		container.bind_type (typeof (Service), typeof (FoodService));
+		container.bind_factory (typeof (Client), container => {
 			return new Client ((Service) container.resolve (typeof (Service)));
 		});
 
@@ -176,7 +176,7 @@ int main (string[] args) {
 	Test.add_func ("/vadi/container/register/mixed/factory-type", () => {
 		var container = new Vadi.Container ();
 
-		container.register_factory (typeof (Service), container => {
+		container.bind_factory (typeof (Service), container => {
 			return new FoodService ();
 		});
 
@@ -191,7 +191,7 @@ int main (string[] args) {
 		var container = new Vadi.Container ();
 		var food_service = new FoodService ();
 
-		container.register_instance (typeof (Service), food_service);
+		container.bind_instance (typeof (Service), food_service);
 
 		var client = (Client) container.resolve (typeof (Client));
 
@@ -204,8 +204,8 @@ int main (string[] args) {
 		var container = new Vadi.Container ();
 		var food_service = new FoodService ();
 
-		container.register_instance (typeof (Service), food_service);
-		container.register_factory (typeof (Client), container => {
+		container.bind_instance (typeof (Service), food_service);
+		container.bind_factory (typeof (Client), container => {
 			return new Client ((Service) container.resolve (typeof (Service)));
 		});
 
