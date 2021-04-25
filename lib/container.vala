@@ -42,7 +42,7 @@ public class Vadi.Container : Object {
 		this._instances[key_type] = instance;
 	}
 
-	public Object? resolve (Type type) requires (type.is_interface () || type.is_object ()) {
+	public new Object? @get (Type type) requires (type.is_interface () || type.is_object ()) {
 		if (this._instances.has_key (type)) {
 			return this._instances[type];
 		}
@@ -121,7 +121,7 @@ public class Vadi.Container : Object {
 					values.resize (values.length + 1);
 
 					var @value = Value (key_type);
-					@value.set_object (this.resolve (key_type));
+					@value.set_object (this.@get (key_type));
 
 					values[values.length - 1] = @value;
 				}
@@ -132,7 +132,7 @@ public class Vadi.Container : Object {
 					values.resize (values.length + 1);
 
 					var @value = Value (key_type);
-					@value.set_object (this.resolve (key_type));
+					@value.set_object (this.@get (key_type));
 
 					values[values.length - 1] = @value;
 				}
@@ -143,7 +143,7 @@ public class Vadi.Container : Object {
 					values.resize (values.length + 1);
 
 					var @value = Value (key_type);
-					@value.set_object (this.resolve (key_type));
+					@value.set_object (this.@get (key_type));
 
 					values[values.length - 1] = @value;
 				}

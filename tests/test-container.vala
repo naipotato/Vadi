@@ -36,7 +36,7 @@ int main (string[] args) {
 	Test.add_func ("/vadi/container/resolve/interface", () => {
 		var container = new Vadi.Container ();
 
-		Object service = container.resolve (typeof (Service));
+		Object service = container.@get (typeof (Service));
 
 		assert_null (service);
 	});
@@ -44,7 +44,7 @@ int main (string[] args) {
 	Test.add_func ("/vadi/container/register/none", () => {
 		var container = new Vadi.Container ();
 
-		Object service = container.resolve (typeof (FoodService));
+		Object service = container.@get (typeof (FoodService));
 
 		assert_nonnull (service);
 	});
@@ -54,7 +54,7 @@ int main (string[] args) {
 
 		container.bind_type (typeof (Service), typeof (FoodService));
 
-		Object service = container.resolve (typeof (Service));
+		Object service = container.@get (typeof (Service));
 
 		assert_nonnull (service);
 		assert_true (service is FoodService);
@@ -65,8 +65,8 @@ int main (string[] args) {
 
 		container.bind_type (typeof (Service), typeof (FoodService));
 
-		Object service_a = container.resolve (typeof (Service));
-		Object service_b = container.resolve (typeof (Service));
+		Object service_a = container.@get (typeof (Service));
+		Object service_b = container.@get (typeof (Service));
 
 		assert_nonnull (service_a);
 		assert_nonnull (service_b);
@@ -81,7 +81,7 @@ int main (string[] args) {
 
 		container.bind_type (typeof (Service), typeof (FoodService));
 
-		var client = (Client) container.resolve (typeof (Client));
+		var client = (Client) container.@get (typeof (Client));
 
 		assert_nonnull (client);
 		assert_nonnull (client.service);
@@ -94,7 +94,7 @@ int main (string[] args) {
 		container.bind_type (typeof (Service), typeof (FoodService));
 		container.bind_type (typeof (Client), typeof (Client));
 
-		var client = (Client) container.resolve (typeof (Client));
+		var client = (Client) container.@get (typeof (Client));
 
 		assert_nonnull (client);
 		assert_nonnull (client.service);
@@ -108,7 +108,7 @@ int main (string[] args) {
 			return new FoodService ();
 		});
 
-		Object service = container.resolve (typeof (Service));
+		Object service = container.@get (typeof (Service));
 
 		assert_nonnull (service);
 		assert_true (service is FoodService);
@@ -121,10 +121,10 @@ int main (string[] args) {
 			return new FoodService ();
 		});
 		container.bind_factory (typeof (Client), container => {
-			return new Client ((Service) container.resolve (typeof (Service)));
+			return new Client ((Service) container.@get (typeof (Service)));
 		});
 
-		var client = (Client) container.resolve (typeof (Client));
+		var client = (Client) container.@get (typeof (Client));
 
 		assert_nonnull (client);
 		assert_nonnull (client.service);
@@ -139,7 +139,7 @@ int main (string[] args) {
 			return new Client (food_service);
 		});
 
-		var client = (Client) container.resolve (typeof (Client));
+		var client = (Client) container.@get (typeof (Client));
 
 		assert_nonnull (client);
 		assert_nonnull (client.service);
@@ -152,7 +152,7 @@ int main (string[] args) {
 
 		container.bind_instance (typeof (Service), food_service);
 
-		Object service = container.resolve (typeof (Service));
+		Object service = container.@get (typeof (Service));
 
 		assert_nonnull (service);
 		assert_true (service == food_service);
@@ -163,10 +163,10 @@ int main (string[] args) {
 
 		container.bind_type (typeof (Service), typeof (FoodService));
 		container.bind_factory (typeof (Client), container => {
-			return new Client ((Service) container.resolve (typeof (Service)));
+			return new Client ((Service) container.@get (typeof (Service)));
 		});
 
-		var client = (Client) container.resolve (typeof (Client));
+		var client = (Client) container.@get (typeof (Client));
 
 		assert_nonnull (client);
 		assert_nonnull (client.service);
@@ -180,7 +180,7 @@ int main (string[] args) {
 			return new FoodService ();
 		});
 
-		var client = (Client) container.resolve (typeof (Client));
+		var client = (Client) container.@get (typeof (Client));
 
 		assert_nonnull (client);
 		assert_nonnull (client.service);
@@ -193,7 +193,7 @@ int main (string[] args) {
 
 		container.bind_instance (typeof (Service), food_service);
 
-		var client = (Client) container.resolve (typeof (Client));
+		var client = (Client) container.@get (typeof (Client));
 
 		assert_nonnull (client);
 		assert_nonnull (client.service);
@@ -206,10 +206,10 @@ int main (string[] args) {
 
 		container.bind_instance (typeof (Service), food_service);
 		container.bind_factory (typeof (Client), container => {
-			return new Client ((Service) container.resolve (typeof (Service)));
+			return new Client ((Service) container.@get (typeof (Service)));
 		});
 
-		var client = (Client) container.resolve (typeof (Client));
+		var client = (Client) container.@get (typeof (Client));
 
 		assert_nonnull (client);
 		assert_nonnull (client.service);
