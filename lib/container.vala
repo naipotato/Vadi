@@ -17,9 +17,9 @@
  */
 
 public class Vadi.Container : Object {
-	private Gee.Map<Type, Type>               _types;
-	private Gee.Map<Type, FactoryFuncClosure> _factories;
-	private Gee.Map<Type, Object>             _instances;
+	private HashTable<Type, Type>               _types;
+	private HashTable<Type, FactoryFuncClosure> _factories;
+	private HashTable<Type, Object>             _instances;
 
 	public void bind_type (Type key_type, Type value_type)
 		requires (key_type.is_interface () || key_type.is_object ())
@@ -43,17 +43,17 @@ public class Vadi.Container : Object {
 	}
 
 	public new Object? @get (Type type) requires (type.is_interface () || type.is_object ()) {
-		if (this._instances.has_key (type)) {
+		if (type in this._instances) {
 			return this._instances[type];
 		}
 
-		if (this._factories.has_key (type)) {
+		if (type in this._factories) {
 			this._instances[type] = (Object) this._factories[type].func (this);
 
 			return this._instances[type];
 		}
 
-		Type resolve_type = this._types.has_key (type) ? this._types[type] : type;
+		Type resolve_type = type in this._types ? this._types[type] : type;
 
 		if (resolve_type.is_object ()) {
 			ParamSpec[] props = this.get_construct_props_from_type (resolve_type);
@@ -87,26 +87,26 @@ public class Vadi.Container : Object {
 		var names = new (unowned string)[0];
 
 		for (var i = 0; i < props.length; i++) {
-			foreach (Type key_type in this._instances.keys) {
+			this._instances.foreach (key_type => {
 				if (props[i].value_type == key_type) {
 					names.resize (names.length + 1);
 					names[names.length - 1] = props[i].name;
 				}
-			}
+			});
 
-			foreach (Type key_type in this._factories.keys) {
+			this._factories.foreach (key_type => {
 				if (props[i].value_type == key_type) {
 					names.resize (names.length + 1);
 					names[names.length - 1] = props[i].name;
 				}
-			}
+			});
 
-			foreach (Type key_type in this._types.keys) {
+			this._types.foreach (key_type => {
 				if (props[i].value_type == key_type) {
 					names.resize (names.length + 1);
 					names[names.length - 1] = props[i].name;
 				}
-			}
+			});
 		}
 
 		return names;
@@ -116,7 +116,7 @@ public class Vadi.Container : Object {
 		var values = new Value[0];
 
 		for (var i = 0; i < props.length; i++) {
-			foreach (Type key_type in this._instances.keys) {
+			this._instances.foreach (key_type => {
 				if (props[i].value_type == key_type) {
 					values.resize (values.length + 1);
 
@@ -125,9 +125,9 @@ public class Vadi.Container : Object {
 
 					values[values.length - 1] = @value;
 				}
-			}
+			});
 
-			foreach (Type key_type in this._factories.keys) {
+			this._factories.foreach (key_type => {
 				if (props[i].value_type == key_type) {
 					values.resize (values.length + 1);
 
@@ -136,9 +136,9 @@ public class Vadi.Container : Object {
 
 					values[values.length - 1] = @value;
 				}
-			}
+			});
 
-			foreach (Type key_type in this._types.keys) {
+			this._types.foreach (key_type => {
 				if (props[i].value_type == key_type) {
 					values.resize (values.length + 1);
 
@@ -147,15 +147,15 @@ public class Vadi.Container : Object {
 
 					values[values.length - 1] = @value;
 				}
-			}
+			});
 		}
 
 		return values;
 	}
 
 	construct {
-		this._types     = new Gee.HashMap<Type, Type> ();
-		this._factories = new Gee.HashMap<Type, FactoryFuncClosure> ();
-		this._instances = new Gee.HashMap<Type, Object> ();
+		this._types     = new HashTable<Type, Type> (direct_hash, direct_equal);
+		this._factories = new HashTable<Type, FactoryFuncClosure> (direct_hash, direct_equal);
+		this._instances = new HashTable<Type, Object> (direct_hash, direct_equal);
 	}
 }
