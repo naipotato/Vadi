@@ -12,11 +12,21 @@
       ];
       forAllSystems = nixpkgs.lib.genAttrs supportedSystems;
       nixpkgsFor = forAllSystems (system: import nixpkgs { inherit system; });
+
+			packagesFor = forAllSystems (system:
+				let
+					pkgs = nixpkgsFor.${system};
+				in with pkgs; rec {
+          nativeBuildInputs = [ meson ninja pkg-config vala gobject-introspection ];
+          buildInputs = [ glib libgee ];
+					propagatedBuildInputs = buildInputs;
+				});
     in
     {
       packages = forAllSystems (system:
         let
-          pkgs = nixpkgsFor.${system};
+					pkgs = nixpkgsFor.${system};
+					packages = packagesFor.${system};
         in
         {
           default = pkgs.stdenv.mkDerivation rec {
@@ -25,8 +35,7 @@
             outputs = [ "out" "dev" ];
 
             enableParallelBuilding = true;
-            nativeBuildInputs = with pkgs; [ meson ninja pkg-config vala gobject-introspection ];
-            buildInputs = with pkgs; [ glib libgee ];
+						inherit (packages) nativeBuildInputs buildInputs propagatedBuildInputs;
 
             meta = with pkgs.lib; {
               homepage = "https://github.com/nahuelwexd/Vadi";
@@ -39,18 +48,11 @@
       devShells = forAllSystems (system:
         let
           pkgs = nixpkgsFor.${system};
+					packages = packagesFor.${system};
         in
         {
           default = pkgs.mkShell {
-            buildInputs = with pkgs; [
-              meson
-              ninja
-              pkg-config
-              vala
-              glib
-							libgee
-							gobject-introspection
-            ];
+						packages = packages.nativeBuildInputs ++ packages.buildInputs;
           };
         });
     };
